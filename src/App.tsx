@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CartDrawer } from "./components/cart/CartDrawer";
 import { SiteBackdrop } from "./components/common/SiteBackdrop";
 import { CompareTray } from "./components/compare/CompareTray";
+import { InstallPrompt } from "./components/common/InstallPrompt";
 import { Hero } from "./components/hero/Hero";
 import { CategoryTiles } from "./components/home/CategoryTiles";
 import { FeaturedProducts } from "./components/home/FeaturedProducts";
@@ -246,6 +247,7 @@ export default function App() {
       {path.startsWith("/admin") ? null : <ChatWidget />}
       <CompareTray />
       <CartDrawer />
+      <InstallPrompt />
       <Toaster theme={theme} position="top-center" closeButton />
     </>
   );

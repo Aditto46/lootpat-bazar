@@ -103,7 +103,16 @@ Step 10 delivered performance, accessibility and the release guide:
 - Product media spec is stated in the admin hint and enforced visually by the square card frame: 1:1 WebP, 1200×1200 plus a 450×450 thumbnail, product centred on a dark or transparent background, so new listings match the seeded catalogue
 - Deployment guide, shop-detail review table and post-launch checklist below
 
-## Shop details to review before publishing
+## Installable mobile app (no app store, no cost)
+
+The storefront is also a PWA. Android/desktop Chrome and Edge show an "Install" action, and iPhone/iPad can use Share → Add to Home Screen. No developer account, store review or subscription is involved.
+
+- `public/manifest.json` — name, icons (192/512/maskable), standalone display and shortcuts to `/shop`, `/track` and `/account`
+- `public/sw.js` — precaches the shell and icons, serves a branded bilingual offline screen when the network drops, and never caches `/functions` API responses so prices, stock and orders are always live
+- `dev/tools/make-icons.mjs` — regenerates the PNG icons from `public/logo.svg` using the installed Edge runtime
+- `dev/tools/check-pwa.mjs` — verifies install eligibility, the mobile install card and the offline fallback against the local build
+
+
 
 Everything below is seed content. Edit it in `/admin/settings` (owner or `settings.write`) on a running site — the footer, support widget, privacy page and checkout read the API, so changes appear on reload. The seed file `functions/seed-data/store.mjs` only matters for a fresh database; keep it in sync if you want a reset to reproduce the same identity.
 

@@ -10,3 +10,5 @@ dist/
 .qoder-sites.json
 
 *.qoder.site
+
+dev/tmp/

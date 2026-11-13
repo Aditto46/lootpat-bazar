@@ -8,6 +8,7 @@ import { CartProvider } from "./lib/cart";
 import { CatalogProvider } from "./lib/catalog";
 import { CompareProvider } from "./lib/compare";
 import { LanguageProvider } from "./lib/i18n";
+import { registerPwa } from "./lib/pwa";
 import { RouterProvider } from "./lib/router";
 import { ThemeProvider } from "./lib/theme";
 import { WishlistProvider } from "./lib/wishlist";
@@ -33,3 +34,5 @@ createRoot(document.getElementById("root")!).render(
     </ThemeProvider>
   </StrictMode>,
 );
+
+registerPwa();
