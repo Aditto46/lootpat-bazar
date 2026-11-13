@@ -26,7 +26,7 @@ const bn = {
   "actions.language": "ভাষা বদলান",
   "actions.viewAll": "সব দেখুন",
   "announce.delivery": "ঢাকায় ২৪ ঘণ্টায় ডেলিভারি",
-  "announce.freeShipping": "৳২,০০০+ অর্ডারে ফ্রি শিপিং",
+  "announce.freeShipping": "৳২,৫০০+ অর্ডারে ফ্রি শিপিং",
   "announce.cod": "সারা দেশে ক্যাশ অন ডেলিভারি",
 
   "hero.eyebrow": "বাংলাদেশের প্রিমিয়াম বাজার",
@@ -1330,7 +1330,7 @@ const en: Record<DictKey, string> = {
   "actions.language": "Change language",
   "actions.viewAll": "View all",
   "announce.delivery": "24-hour delivery in Dhaka",
-  "announce.freeShipping": "Free shipping over ৳2,000",
+  "announce.freeShipping": "Free shipping over ৳2,500",
   "announce.cod": "Cash on delivery nationwide",
 
   "hero.eyebrow": "Bangladesh's premium bazaar",

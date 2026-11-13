@@ -65,7 +65,7 @@ test("starting a chat answers from live store data and stores only the token dig
   assert.equal(started.messages.length, 2);
   assert.equal(started.messages[0].authorType, "customer");
   assert.equal(started.messages[1].authorType, "assistant");
-  assert.match(started.messages[1].body, /৬০/);
+  assert.match(started.messages[1].body, /৮০/);
   assert.match(started.messages[1].body, /১২০/);
   assert.ok(Array.isArray(started.quickReplies));
   assert.ok(started.token.length >= 20);

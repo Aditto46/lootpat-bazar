@@ -11,10 +11,10 @@ export const SETTINGS = [
   { key: "store.trade_license", value: "" },
   { key: "store.tin", value: "" },
 
-  // Dhaka city ৳60, everywhere else ৳120, free from ৳2,000 merchandise value.
-  { key: "delivery.dhaka_charge_paisa", value: "6000" },
+  // Dhaka city ৳80, everywhere else ৳120, free from ৳2,500 merchandise value.
+  { key: "delivery.dhaka_charge_paisa", value: "8000" },
   { key: "delivery.outside_charge_paisa", value: "12000" },
-  { key: "delivery.free_threshold_paisa", value: "200000" },
+  { key: "delivery.free_threshold_paisa", value: "250000" },
   { key: "delivery.cod_limit_paisa", value: "1000000" },
   { key: "delivery.cod_enabled", value: "true" },
 

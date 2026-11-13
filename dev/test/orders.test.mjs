@@ -51,9 +51,9 @@ test("checkout config exposes real delivery economics and enabled gateways", asy
   const response = await call(app, "GET", "/api/checkout/config");
   assert.equal(response.status, 200);
   assert.equal(response.json.store.name.bn, "লুটপাট বাজার");
-  assert.equal(response.json.delivery.dhakaPaisa, 6000);
+  assert.equal(response.json.delivery.dhakaPaisa, 8000);
   assert.equal(response.json.delivery.outsidePaisa, 12000);
-  assert.equal(response.json.delivery.freeThresholdPaisa, 200000);
+  assert.equal(response.json.delivery.freeThresholdPaisa, 250000);
   assert.equal(response.json.delivery.codLimitPaisa, 1000000);
   assert.equal(response.json.payments.cod, true);
   assert.equal(response.json.payments.wallet, true);
@@ -78,8 +78,8 @@ test("COD order recomputes totals, reserves stock and stays private", async () =
   assert.equal(order.paymentStatus, "unpaid");
   assert.equal(order.customer.phone, "+8801712345678");
   assert.equal(order.totals.subtotalPaisa, 158000);
-  assert.equal(order.totals.shippingPaisa, 6000);
-  assert.equal(order.totals.totalPaisa, 164000);
+  assert.equal(order.totals.shippingPaisa, 8000);
+  assert.equal(order.totals.totalPaisa, 166000);
   assert.equal(order.items.length, 1);
   assert.deepEqual(order.items[0].variantLabel, { bn: "স্টোন", en: "Stone" });
   assert.equal(order.items[0].unitPricePaisa, 79000);
@@ -133,7 +133,7 @@ test("coupons apply server-side with limits and free shipping", async () => {
   });
   assert.equal(discountOrder.status, 201);
   assert.equal(discountOrder.json.order.totals.discountPaisa, 15800);
-  assert.equal(discountOrder.json.order.totals.totalPaisa, 148200);
+  assert.equal(discountOrder.json.order.totals.totalPaisa, 150200);
   assert.equal(discountOrder.json.order.couponCode, "WELCOME10");
 
   const reused = await call(app, "POST", "/api/orders", {
@@ -182,13 +182,13 @@ test("free delivery starts at the configured merchandise threshold", async () =>
   const { app } = await seededApp();
   const created = await call(app, "POST", "/api/orders", {
     body: body({
-      items: [{ productId: MUG.id, variantId: MUG_STONE.id, qty: 3 }],
+      items: [{ productId: MUG.id, variantId: MUG_STONE.id, qty: 4 }],
       customer: { ...body().customer, phone: "01712345672", districtId: "chattogram" },
     }),
     ip: "198.51.100.31",
   });
   assert.equal(created.status, 201);
-  assert.equal(created.json.order.totals.subtotalPaisa, 237000);
+  assert.equal(created.json.order.totals.subtotalPaisa, 316000);
   assert.equal(created.json.order.totals.shippingPaisa, 0);
   assert.equal(created.json.order.customer.district.name.en, "Chattogram");
 });
