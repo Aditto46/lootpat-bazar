@@ -30,20 +30,22 @@ CREATE TABLE app.users (
   password_salt text NOT NULL,
   password_hash text NOT NULL,
   password_iterations integer NOT NULL,
-  status text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'suspended')),
+  status text NOT NULL DEFAULT 'active',
   last_login_at timestamptz,
+  birth_date text,
+  marketing_opt_out boolean NOT NULL DEFAULT false,
+  two_factor_secret text,
+  two_factor_enabled_at timestamptz,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
-  deleted_at timestamptz,
-  CHECK (email IS NOT NULL OR phone IS NOT NULL)
+  deleted_at timestamptz
 );
 
 CREATE INDEX users_role_id_idx ON app.users (role_id);
 CREATE INDEX users_created_at_idx ON app.users (created_at);
 
--- Exactly one owner at a time. Ownership transfer must change the existing
--- owner's role before another account can claim it.
-CREATE UNIQUE INDEX users_single_owner_idx ON app.users (role_id) WHERE role_id = 'owner';
+-- Exactly one owner at a time is enforced by the setup and team routes; the
+-- hosted DDL subset has no partial indexes.
 
 -- Only a SHA-256 digest of the opaque session token is stored.
 CREATE TABLE app.sessions (
@@ -72,7 +74,7 @@ CREATE TABLE app.districts (
   name_en text NOT NULL,
   division_bn text NOT NULL,
   division_en text NOT NULL,
-  position integer NOT NULL
+  sort_order integer NOT NULL
 );
 
 CREATE TABLE app.categories (
@@ -84,7 +86,7 @@ CREATE TABLE app.categories (
   blurb_en text NOT NULL,
   accent text NOT NULL,
   icon text NOT NULL,
-  position integer NOT NULL,
+  sort_order integer NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
@@ -92,22 +94,23 @@ CREATE TABLE app.products (
   id uuid PRIMARY KEY,
   slug text NOT NULL UNIQUE,
   category_id text NOT NULL REFERENCES app.categories (id),
+  brand text NOT NULL DEFAULT 'LootPat Bazar',
   name_bn text NOT NULL,
   name_en text NOT NULL,
   tagline_bn text NOT NULL,
   tagline_en text NOT NULL,
   description_bn text NOT NULL,
   description_en text NOT NULL,
-  price_paisa integer NOT NULL CHECK (price_paisa > 0),
-  compare_at_paisa integer CHECK (compare_at_paisa IS NULL OR compare_at_paisa >= price_paisa),
-  stock integer NOT NULL DEFAULT 0 CHECK (stock >= 0),
+  price_paisa integer NOT NULL,
+  compare_at_paisa integer,
+  stock integer NOT NULL DEFAULT 0,
   low_stock_threshold integer NOT NULL DEFAULT 5,
-  rating_tenths integer NOT NULL DEFAULT 0 CHECK (rating_tenths BETWEEN 0 AND 50),
-  reviews integer NOT NULL DEFAULT 0 CHECK (reviews >= 0),
-  badge text CHECK (badge IN ('bestseller', 'new', 'limited')),
+  rating_tenths integer NOT NULL DEFAULT 0,
+  reviews integer NOT NULL DEFAULT 0,
+  badge text,
   image text NOT NULL,
   image_small text NOT NULL,
-  status text NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'active', 'archived')),
+  status text NOT NULL DEFAULT 'draft',
   featured boolean NOT NULL DEFAULT false,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
@@ -124,7 +127,7 @@ CREATE TABLE app.product_images (
   url text NOT NULL,
   alt_bn text NOT NULL,
   alt_en text NOT NULL,
-  position integer NOT NULL DEFAULT 0
+  sort_order integer NOT NULL DEFAULT 0
 );
 
 CREATE INDEX product_images_product_id_idx ON app.product_images (product_id);
@@ -135,9 +138,11 @@ CREATE TABLE app.product_variants (
   sku text NOT NULL UNIQUE,
   option_label_bn text NOT NULL,
   option_label_en text NOT NULL,
-  price_paisa integer NOT NULL CHECK (price_paisa > 0),
-  stock integer NOT NULL DEFAULT 0 CHECK (stock >= 0),
-  position integer NOT NULL DEFAULT 0
+  option_type text NOT NULL DEFAULT 'color',
+  swatch text,
+  price_paisa integer NOT NULL,
+  stock integer NOT NULL DEFAULT 0,
+  sort_order integer NOT NULL DEFAULT 0
 );
 
 CREATE INDEX product_variants_product_id_idx ON app.product_variants (product_id);

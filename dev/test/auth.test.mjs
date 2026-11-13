@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createFakeDb } from "./fake-db.mjs";
-import { PASSWORD, SETUP_TOKEN, call, login, makeApp, setupWithOwner } from "./helpers.mjs";
+import { BASE, ORIGIN, PASSWORD, SETUP_TOKEN, call, login, makeApp, setupWithOwner } from "./helpers.mjs";
+import { createApplication } from "../../functions/app.mjs";
 import { sha256Hex } from "../../functions/sessions.mjs";
 import { verifyPassword } from "../../functions/passwords.mjs";
 
@@ -268,4 +269,41 @@ test("logout clears the cookie and invalidates that session only", async () => {
   assert.equal(gone.status, 401);
   const still = await call(app, "GET", "/api/auth/me", { cookie: two.cookie });
   assert.equal(still.status, 200);
+});
+
+test("a database with no token seeds once and then requires the configured token", async () => {
+  const fresh = createApplication({ db: createFakeDb(), origin: ORIGIN, setupToken: undefined, env: {} });
+  const created = await call(fresh, "POST", "/api/setup", {
+    body: { owner: { name: "Owner", email: "first@lootpat.test", password: PASSWORD } },
+  });
+  assert.equal(created.status, 200);
+  assert.equal(created.json.ownerCreated, true);
+
+  const second = await call(fresh, "POST", "/api/setup", {
+    body: { owner: { name: "Other", email: "second@lootpat.test", password: PASSWORD } },
+  });
+  assert.equal(second.status, 403);
+  assert.equal(second.json.error, "setup_forbidden");
+});
+
+test("without APP_ORIGIN the request origin is enforced for writes", async () => {
+  const db2 = createFakeDb();
+  const derived = createApplication({
+    db: db2,
+    origin: (request) => new URL(request.url).origin,
+    setupToken: SETUP_TOKEN,
+    env: {},
+  });
+  const wrong = await call(derived, "POST", "/api/setup", {
+    headers: { origin: "https://evil.example", "x-setup-token": SETUP_TOKEN },
+    body: {},
+  });
+  assert.equal(wrong.status, 403);
+
+  const requestOrigin = new URL(BASE).origin;
+  const right = await call(derived, "POST", "/api/setup", {
+    headers: { origin: requestOrigin, "x-setup-token": SETUP_TOKEN },
+    body: {},
+  });
+  assert.equal(right.status, 200);
 });

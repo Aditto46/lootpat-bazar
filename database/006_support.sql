@@ -12,10 +12,9 @@ CREATE TABLE app.support_conversations (
   customer_name text NOT NULL,
   customer_phone text,
   order_number text,
-  locale text NOT NULL DEFAULT 'bn' CHECK (locale IN ('bn', 'en')),
-  channel text NOT NULL DEFAULT 'web' CHECK (channel IN ('web')),
-  status text NOT NULL DEFAULT 'bot'
-    CHECK (status IN ('bot', 'waiting', 'open', 'resolved')),
+  locale text NOT NULL DEFAULT 'bn',
+  channel text NOT NULL DEFAULT 'web',
+  status text NOT NULL DEFAULT 'bot',
   assigned_to uuid REFERENCES app.users (id) ON DELETE SET NULL,
   sla_due_at timestamptz,
   first_response_at timestamptz,
@@ -31,8 +30,7 @@ CREATE INDEX support_conversations_assigned_idx ON app.support_conversations (as
 CREATE TABLE app.support_messages (
   id uuid PRIMARY KEY,
   conversation_id uuid NOT NULL REFERENCES app.support_conversations (id) ON DELETE CASCADE,
-  author_type text NOT NULL
-    CHECK (author_type IN ('customer', 'assistant', 'staff', 'system')),
+  author_type text NOT NULL,
   author_id uuid REFERENCES app.users (id) ON DELETE SET NULL,
   body text NOT NULL,
   intent text,
@@ -46,8 +44,8 @@ CREATE TABLE app.support_canned_replies (
   id uuid PRIMARY KEY,
   title text NOT NULL,
   body text NOT NULL,
-  locale text NOT NULL DEFAULT 'bn' CHECK (locale IN ('bn', 'en')),
-  position integer NOT NULL DEFAULT 0,
+  locale text NOT NULL DEFAULT 'bn',
+  sort_order integer NOT NULL DEFAULT 0,
   created_by uuid REFERENCES app.users (id) ON DELETE SET NULL,
   created_at timestamptz NOT NULL DEFAULT now()
 );
@@ -60,9 +58,9 @@ CREATE TABLE app.faq_entries (
   answer_en text NOT NULL,
   keywords text NOT NULL DEFAULT '',
   category text NOT NULL DEFAULT 'general',
-  position integer NOT NULL DEFAULT 0,
+  sort_order integer NOT NULL DEFAULT 0,
   published boolean NOT NULL DEFAULT true,
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX faq_entries_published_idx ON app.faq_entries (published, position);
+CREATE INDEX faq_entries_published_idx ON app.faq_entries (published, sort_order);

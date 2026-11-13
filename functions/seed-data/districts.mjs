@@ -92,7 +92,7 @@ const rows = [
 ];
 
 export const DISTRICTS = rows.map(([id, name_bn, name_en, division_bn, division_en], position) =>
-  ({ ...district(id, name_bn, name_en, division_bn, division_en), position }));
+  ({ ...district(id, name_bn, name_en, division_bn, division_en), sort_order: position }));
 
 export const DIVISIONS = [...new Set(DISTRICTS.map((row) => `${row.division_bn}|${row.division_en}`))]
   .map((pair) => {

@@ -110,7 +110,7 @@ function buildVariants(slug, optionType, sets) {
     option_label_en: labelEn,
     price_paisa: priceTaka * 100,
     stock,
-    position: index,
+    sort_order: index,
     swatch: swatch ?? null,
   }));
 }

@@ -285,10 +285,10 @@ async function loadFaqs(db) {
     const list = rows(
       await db
         .from("faq_entries")
-        .select("id,question_bn,question_en,answer_bn,answer_en,keywords,position,published")
+        .select("id,question_bn,question_en,answer_bn,answer_en,keywords,sort_order,published")
         .limit(50),
     ).filter((row) => row.published !== false);
-    return list.sort((left, right) => (left.position ?? 0) - (right.position ?? 0));
+    return list.sort((left, right) => (left.sort_order ?? 0) - (right.sort_order ?? 0));
   } catch {
     return [];
   }

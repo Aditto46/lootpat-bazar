@@ -178,14 +178,23 @@ async function loadCanned(db) {
   const list = rows(
     await db
       .from("support_canned_replies")
-      .select("id,title,body,locale,position,created_at")
+      .select("id,title,body,locale,sort_order,created_at")
       .limit(100),
   );
-  return list.sort(
-    (left, right) =>
-      (left.position ?? 0) - (right.position ?? 0) ||
-      String(left.title).localeCompare(String(right.title)),
-  );
+  return list
+    .sort(
+      (left, right) =>
+        (left.sort_order ?? 0) - (right.sort_order ?? 0) ||
+        String(left.title).localeCompare(String(right.title)),
+    )
+    .map((row) => ({
+      id: row.id,
+      title: row.title,
+      body: row.body,
+      locale: row.locale,
+      position: row.sort_order,
+      created_at: row.created_at,
+    }));
 }
 
 // ---------------------------------------------------------------------------
@@ -391,11 +400,11 @@ export async function handleSupportFaq(db, request) {
   const faqs = rows(
     await db
       .from("faq_entries")
-      .select("id,question_bn,question_en,answer_bn,answer_en,category,position,published")
+      .select("id,question_bn,question_en,answer_bn,answer_en,category,sort_order,published")
       .limit(50),
   )
     .filter((row) => row.published !== false)
-    .sort((left, right) => (left.position ?? 0) - (right.position ?? 0))
+    .sort((left, right) => (left.sort_order ?? 0) - (right.sort_order ?? 0))
     .slice(0, 6)
     .map((row) => ({
       id: row.id,
@@ -644,16 +653,16 @@ export async function handleAdminCannedList(db) {
 export async function handleAdminCannedCreate(db, request, principal) {
   const body = parse(adminCannedCreateSchema, await readJson(request));
   const existing = rows(
-    await db.from("support_canned_replies").select("position").limit(100),
+    await db.from("support_canned_replies").select("sort_order").limit(100),
   );
   const position =
-    existing.reduce((max, row) => Math.max(max, Number(row.position) || 0), 0) + 1;
+    existing.reduce((max, row) => Math.max(max, Number(row.sort_order) || 0), 0) + 1;
   const row = {
     id: crypto.randomUUID(),
     title: body.title,
     body: body.body,
     locale: body.locale,
-    position,
+    sort_order: position,
     created_by: principal.user.id,
     created_at: nowIso(),
   };

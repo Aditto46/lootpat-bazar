@@ -5,8 +5,7 @@
 --
 -- Run after 007_marketing.sql.
 
-ALTER TABLE app.users ADD COLUMN two_factor_secret text;
-ALTER TABLE app.users ADD COLUMN two_factor_enabled_at timestamptz;
+-- TOTP columns live in 001_init.sql.
 
 CREATE TABLE app.user_recovery_codes (
   id uuid PRIMARY KEY,
@@ -27,7 +26,7 @@ CREATE TABLE app.login_challenges (
   ip text,
   created_at timestamptz NOT NULL DEFAULT now(),
   expires_at timestamptz NOT NULL,
-  attempts integer NOT NULL DEFAULT 0 CHECK (attempts >= 0),
+  attempts integer NOT NULL DEFAULT 0,
   consumed_at timestamptz
 );
 
@@ -39,9 +38,9 @@ CREATE TABLE app.backups (
   id uuid PRIMARY KEY,
   created_by uuid REFERENCES app.users (id) ON DELETE SET NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
-  table_count integer NOT NULL CHECK (table_count >= 0),
-  row_count integer NOT NULL CHECK (row_count >= 0),
-  size_bytes integer NOT NULL CHECK (size_bytes >= 0),
+  table_count integer NOT NULL,
+  row_count integer NOT NULL,
+  size_bytes integer NOT NULL,
   payload text NOT NULL
 );
 

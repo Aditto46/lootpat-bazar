@@ -13,7 +13,7 @@ export const ORDER_COLUMNS =
 const PRODUCT_COLUMNS = "id,slug,name_bn,name_en,price_paisa,stock,status,image,image_small,deleted_at";
 const VARIANT_COLUMNS = "id,product_id,sku,option_label_bn,option_label_en,price_paisa,stock";
 export const ITEM_COLUMNS =
-  "id,order_id,position,product_id,product_slug,variant_id,sku,name_bn,name_en,variant_label_bn,variant_label_en,unit_price_paisa,qty,line_total_paisa,image";
+  "id,order_id,sort_order,product_id,product_slug,variant_id,sku,name_bn,name_en,variant_label_bn,variant_label_en,unit_price_paisa,qty,line_total_paisa,image";
 export const HISTORY_COLUMNS = "id,order_id,status,created_at";
 
 const DEFAULT_SETTINGS = {
@@ -246,7 +246,7 @@ export function publicOrder(row, items, history) {
       marketingConsent: Boolean(row.marketing_consent),
     },
     items: [...items]
-      .sort((left, right) => left.position - right.position)
+      .sort((left, right) => left.sort_order - right.sort_order)
       .map(orderItem),
     totals: {
       subtotalPaisa: row.subtotal_paisa,
@@ -612,7 +612,7 @@ export async function handleCreateOrder(db, request, userId, context) {
       const itemRow = {
         id: newId(),
         order_id: orderId,
-        position,
+        sort_order: position,
         product_id: line.product.id,
         product_slug: line.product.slug,
         variant_id: line.variant ? line.variant.id : null,
@@ -704,7 +704,7 @@ export async function handleCreateOrder(db, request, userId, context) {
     orderRow,
     lines.map((line, position) => ({
       order_id: orderId,
-      position,
+      sort_order: position,
       product_id: line.product.id,
       product_slug: line.product.slug,
       variant_id: line.variant ? line.variant.id : null,

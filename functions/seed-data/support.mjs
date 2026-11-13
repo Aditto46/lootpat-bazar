@@ -13,19 +13,19 @@ export const FAQ_ENTRIES = [
       "Dhaka usually arrives within 24 hours; the rest of Bangladesh takes 2–3 working days. Once the order is confirmed we send tracking information by SMS.",
     keywords: "delivery,ডেলিভারি,কতদিন,কবে পাব,shipping,কুরিয়ার,পৌঁছাবে",
     category: "delivery",
-    position: 1,
+    sort_order: 1,
   },
   {
     id: "faq-delivery-charge",
     question_bn: "ডেলিভারি চার্জ কত?",
     question_en: "What is the delivery charge?",
     answer_bn:
-      "ঢাকার ভিতরে ৳৬০ এবং ঢাকার বাইরে ৳১২০। ৳২,০০০ বা তার বেশি অর্ডারে ডেলিভারি ফ্রি। চেকআউটে জেলা বেছে নিলে সঠিক চার্জ দেখতে পাবেন।",
+      "ঢাকার ভিতরে ৳৮০ এবং ঢাকার বাইরে ৳১২০। ৳২,৫০০ বা তার বেশি অর্ডারে ডেলিভারি ফ্রি। চেকআউটে জেলা বেছে নিলে সঠিক চার্জ দেখতে পাবেন।",
     answer_en:
-      "৳60 inside Dhaka and ৳120 outside Dhaka. Delivery is free on orders of ৳2,000 or more. Choose your district at checkout to see the exact charge.",
+      "৳80 inside Dhaka and ৳120 outside Dhaka. Delivery is free on orders of ৳2,500 or more. Choose your district at checkout to see the exact charge.",
     keywords: "delivery charge,ডেলিভারি চার্জ,শিপিং,shipping,কত টাকা,ফ্রি ডেলিভারি,free delivery",
     category: "delivery",
-    position: 2,
+    sort_order: 2,
   },
   {
     id: "faq-return",
@@ -37,7 +37,7 @@ export const FAQ_ENTRIES = [
       "Returns and exchanges are accepted within 7 days of delivery if the item is unused and the tags and packaging are intact. Contact the hotline with your order number to start.",
     keywords: "return,রিটার্ন,ফেরত,exchange,এক্সচেঞ্জ,বদলানো,রিফান্ড,refund",
     category: "returns",
-    position: 3,
+    sort_order: 3,
   },
   {
     id: "faq-payment",
@@ -49,7 +49,7 @@ export const FAQ_ENTRIES = [
       "Cash on delivery, bKash, Nagad and card/SSLCommerz. When online payment is enabled you can finish it from the order page. Card details are never stored.",
     keywords: "payment,পেমেন্ট,bkash,nagad,sslcommerz,কার্ড,card,cod,ক্যাশ অন ডেলিভারি",
     category: "payments",
-    position: 4,
+    sort_order: 4,
   },
   {
     id: "faq-cod",
@@ -61,7 +61,7 @@ export const FAQ_ENTRIES = [
       "Cash on delivery is available up to ৳10,000. Above that, please use online payment. You pay the courier when the parcel arrives.",
     keywords: "cod,cash on delivery,ক্যাশ অন ডেলিভারি,সীমা,limit,টাকা দিব,pay on delivery",
     category: "payments",
-    position: 5,
+    sort_order: 5,
   },
   {
     id: "faq-tracking",
@@ -73,7 +73,7 @@ export const FAQ_ENTRIES = [
       "Open /track and enter your order number with the phone used to order. The order confirmation link also shows the live status.",
     keywords: "track,ট্র্যাক,স্ট্যাটাস,status,অর্ডার কোথায়,order status,কোথায় আছে",
     category: "orders",
-    position: 6,
+    sort_order: 6,
   },
   {
     id: "faq-cancel",
@@ -85,7 +85,7 @@ export const FAQ_ENTRIES = [
       "Orders can be cancelled before they ship. Call the hotline with your order number as soon as possible; once shipped, use the return process after delivery.",
     keywords: "cancel,বাতিল,ক্যান্সেল,অর্ডার বাতিল,cancel order",
     category: "orders",
-    position: 7,
+    sort_order: 7,
   },
   {
     id: "faq-coupon",
@@ -97,7 +97,7 @@ export const FAQ_ENTRIES = [
       "Enter the code at checkout and press apply. If the minimum spend and validity match, the discount appears immediately. One coupon per order.",
     keywords: "coupon,কুপন,ডিসকাউন্ট,discount,ছাড়,promo,প্রোমো",
     category: "coupons",
-    position: 8,
+    sort_order: 8,
   },
   {
     id: "faq-warranty",
@@ -109,7 +109,7 @@ export const FAQ_ENTRIES = [
       "All items come from verified suppliers and match the product photos. Electronics carry the brand warranty; report any problem within 7 days.",
     keywords: "genuine,আসল,ওয়ারেন্টি,warranty,নকল,original,quality",
     category: "products",
-    position: 9,
+    sort_order: 9,
   },
   {
     id: "faq-contact",
@@ -121,7 +121,7 @@ export const FAQ_ENTRIES = [
       "Call +880 1410-286822 (Sat–Thu, 10am–8pm). You can also chat live with an agent here — type \"agent\" to be connected.",
     keywords: "contact,যোগাযোগ,হটলাইন,hotline,ফোন,phone,whatsapp,সাপোর্ট,support",
     category: "general",
-    position: 10,
+    sort_order: 10,
   },
 ];
 
@@ -131,41 +131,41 @@ export const CANNED_REPLIES = [
     title: "স্বাগতম",
     body: "ধন্যবাদ যোগাযোগের জন্য! আপনার প্রশ্নটি পেয়েছি — একটু বিস্তারিত লিখলে দ্রুত সাহায্য করতে পারব।",
     locale: "bn",
-    position: 1,
+    sort_order: 1,
   },
   {
     id: "canned-order-check",
     title: "অর্ডার তথ্য চাওয়া",
     body: "অর্ডারটি খুঁজে বের করতে অর্ডার নম্বর (LP-XXXXXX-XXXXXX) এবং যে মোবাইল নম্বর দিয়ে অর্ডার করেছিলেন সেটি জানান।",
     locale: "bn",
-    position: 2,
+    sort_order: 2,
   },
   {
     id: "canned-delivery",
     title: "ডেলিভারি আপডেট",
     body: "আপনার অর্ডারটি কুরিয়ারে দেওয়া হয়েছে। ঢাকায় ২৪ ঘণ্টা এবং ঢাকার বাইরে ২–৩ কর্মদিবসে পৌঁছাবে। ট্র্যাকিং নম্বরটি SMS-এ পাঠানো হয়েছে।",
     locale: "bn",
-    position: 3,
+    sort_order: 3,
   },
   {
     id: "canned-return",
     title: "রিটার্ন নির্দেশনা",
     body: "পণ্য অব্যবহৃত ও ট্যাগ অক্ষত থাকলে ডেলিভারির ৭ দিনের মধ্যে রিটার্ন করা যাবে। ছবি ও অর্ডার নম্বর পাঠালে আমরা রিটার্ন রিকোয়েস্ট খুলে দেব।",
     locale: "bn",
-    position: 4,
+    sort_order: 4,
   },
   {
     id: "canned-greeting-en",
     title: "Welcome",
     body: "Thanks for reaching out! I have your message — share a little more detail and I will help right away.",
     locale: "en",
-    position: 5,
+    sort_order: 5,
   },
   {
     id: "canned-order-check-en",
     title: "Ask for order details",
     body: "To find the order, please share the order number (LP-XXXXXX-XXXXXX) and the mobile number used at checkout.",
     locale: "en",
-    position: 6,
+    sort_order: 6,
   },
 ];

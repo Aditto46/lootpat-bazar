@@ -29,7 +29,7 @@ import { awardLoyalty, notifyBackInStock, readMarketingSettings } from "./market
 const ADMIN_PRODUCT_COLUMNS =
   "id,slug,category_id,brand,name_bn,name_en,tagline_bn,tagline_en,description_bn,description_en,price_paisa,compare_at_paisa,stock,low_stock_threshold,rating_tenths,reviews,badge,image,image_small,status,featured,created_at,updated_at,deleted_at";
 const VARIANT_COLUMNS =
-  "id,product_id,sku,option_type,option_label_bn,option_label_en,price_paisa,stock,position,swatch";
+  "id,product_id,sku,option_type,option_label_bn,option_label_en,price_paisa,stock,sort_order,swatch";
 const PLACEHOLDER_IMAGE = "/products/placeholder.svg";
 
 const DHAKA_OFFSET_MS = 6 * 60 * 60 * 1000;
@@ -412,7 +412,7 @@ function adminVariant(row) {
     label: { bn: row.option_label_bn, en: row.option_label_en },
     pricePaisa: row.price_paisa,
     stock: row.stock,
-    position: row.position,
+    position: row.sort_order,
     swatch: row.swatch ?? null,
   };
 }
@@ -441,7 +441,7 @@ function adminProduct(row, variants = []) {
     updatedAt: row.updated_at,
     deletedAt: row.deleted_at ?? null,
     variants: [...variants]
-      .sort((left, right) => left.position - right.position)
+      .sort((left, right) => left.sort_order - right.sort_order)
       .map(adminVariant),
   };
 }
@@ -551,7 +551,7 @@ function variantRow(input, productId, position, sku) {
     option_label_en: input.labelEn,
     price_paisa: input.pricePaisa,
     stock: input.stock,
-    position,
+    sort_order: position,
     swatch: input.swatch ?? null,
   };
 }
@@ -739,7 +739,7 @@ export async function handleProductUpdate(db, request, principal, productId, env
             option_label_en: input.labelEn,
             price_paisa: input.pricePaisa,
             stock: input.stock,
-            position: input.position ?? index,
+            sort_order: input.position ?? index,
             swatch: input.swatch ?? null,
           },
         });
@@ -927,7 +927,7 @@ export async function handleProductImport(db, request, principal) {
           option_label_en: row.variantLabelEn,
           price_paisa: row.variantPricePaisa ?? row.pricePaisa,
           stock: variantStock,
-          position: 0,
+          sort_order: 0,
           swatch: row.swatch ?? null,
         };
         const savedVariant = rows(

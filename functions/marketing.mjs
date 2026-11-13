@@ -458,7 +458,7 @@ export async function handleBanners(db) {
     .filter((banner) => banner.active)
     .filter((banner) => !banner.starts_at || Date.parse(banner.starts_at) <= now)
     .filter((banner) => !banner.ends_at || Date.parse(banner.ends_at) > now)
-    .sort((left, right) => left.position - right.position);
+    .sort((left, right) => left.sort_order - right.sort_order);
   return json({
     banners: banners.map((banner) => ({
       id: banner.id,
@@ -500,7 +500,7 @@ export async function handleSpinPublic(db) {
   const settings = await readMarketingSettings(db);
   const prizes = rows(await db.from("spin_prizes").select("*").limit(20))
     .filter((prize) => prize.active)
-    .sort((left, right) => left.position - right.position);
+    .sort((left, right) => left.sort_order - right.sort_order);
   return json({
     enabled: settings.spinEnabled && prizes.length > 0,
     prizes: prizes.map((prize) => ({

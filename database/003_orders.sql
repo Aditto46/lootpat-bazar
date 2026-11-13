@@ -11,17 +11,16 @@ CREATE TABLE app.settings (
 CREATE TABLE app.coupons (
   id text PRIMARY KEY,
   code text NOT NULL UNIQUE,
-  kind text NOT NULL CHECK (kind IN ('percent', 'fixed', 'free_shipping')),
-  value integer NOT NULL DEFAULT 0 CHECK (value >= 0),
-  min_subtotal_paisa integer NOT NULL DEFAULT 0 CHECK (min_subtotal_paisa >= 0),
-  max_discount_paisa integer CHECK (max_discount_paisa IS NULL OR max_discount_paisa > 0),
-  usage_limit integer CHECK (usage_limit IS NULL OR usage_limit > 0),
-  per_customer_limit integer CHECK (per_customer_limit IS NULL OR per_customer_limit > 0),
+  kind text NOT NULL,
+  value integer NOT NULL DEFAULT 0,
+  min_subtotal_paisa integer NOT NULL DEFAULT 0,
+  max_discount_paisa integer,
+  usage_limit integer,
+  per_customer_limit integer,
   starts_at timestamptz,
   ends_at timestamptz,
   active boolean NOT NULL DEFAULT true,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  CHECK (kind <> 'percent' OR (value BETWEEN 1 AND 100))
+  created_at timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE INDEX coupons_active_idx ON app.coupons (active);
@@ -32,12 +31,9 @@ CREATE TABLE app.orders (
   lookup_token text NOT NULL,
   idempotency_key text UNIQUE,
   user_id uuid REFERENCES app.users (id) ON DELETE SET NULL,
-  status text NOT NULL DEFAULT 'pending'
-    CHECK (status IN ('pending', 'confirmed', 'packed', 'shipped', 'delivered', 'returned', 'cancelled')),
-  payment_method text NOT NULL
-    CHECK (payment_method IN ('cod', 'bkash', 'nagad', 'sslcommerz')),
-  payment_status text NOT NULL DEFAULT 'unpaid'
-    CHECK (payment_status IN ('unpaid', 'pending', 'paid', 'failed', 'refunded')),
+  status text NOT NULL DEFAULT 'pending',
+  payment_method text NOT NULL,
+  payment_status text NOT NULL DEFAULT 'unpaid',
   customer_name text NOT NULL,
   phone text NOT NULL,
   email text,
@@ -49,14 +45,18 @@ CREATE TABLE app.orders (
   address text NOT NULL,
   area text,
   note text,
-  subtotal_paisa integer NOT NULL CHECK (subtotal_paisa >= 0),
-  discount_paisa integer NOT NULL DEFAULT 0 CHECK (discount_paisa >= 0),
-  shipping_paisa integer NOT NULL DEFAULT 0 CHECK (shipping_paisa >= 0),
-  total_paisa integer NOT NULL CHECK (total_paisa >= 0),
+  subtotal_paisa integer NOT NULL,
+  discount_paisa integer NOT NULL DEFAULT 0,
+  shipping_paisa integer NOT NULL DEFAULT 0,
+  total_paisa integer NOT NULL,
   coupon_code text,
   marketing_consent boolean NOT NULL DEFAULT false,
   ip text,
   user_agent text,
+  courier text,
+  tracking_number text,
+  courier_status text,
+  shipped_at timestamptz,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
@@ -69,7 +69,7 @@ CREATE INDEX orders_user_id_idx ON app.orders (user_id);
 CREATE TABLE app.order_items (
   id uuid PRIMARY KEY,
   order_id uuid NOT NULL REFERENCES app.orders (id) ON DELETE CASCADE,
-  position integer NOT NULL DEFAULT 0,
+  sort_order integer NOT NULL DEFAULT 0,
   product_id uuid NOT NULL REFERENCES app.products (id),
   product_slug text NOT NULL,
   variant_id uuid REFERENCES app.product_variants (id),
@@ -78,9 +78,9 @@ CREATE TABLE app.order_items (
   name_en text NOT NULL,
   variant_label_bn text,
   variant_label_en text,
-  unit_price_paisa integer NOT NULL CHECK (unit_price_paisa > 0),
-  qty integer NOT NULL CHECK (qty > 0),
-  line_total_paisa integer NOT NULL CHECK (line_total_paisa > 0),
+  unit_price_paisa integer NOT NULL,
+  qty integer NOT NULL,
+  line_total_paisa integer NOT NULL,
   image text NOT NULL
 );
 
@@ -102,8 +102,8 @@ CREATE TABLE app.payments (
   id uuid PRIMARY KEY,
   order_id uuid NOT NULL REFERENCES app.orders (id) ON DELETE CASCADE,
   method text NOT NULL,
-  status text NOT NULL CHECK (status IN ('unpaid', 'pending', 'paid', 'failed', 'refunded')),
-  amount_paisa integer NOT NULL CHECK (amount_paisa >= 0),
+  status text NOT NULL,
+  amount_paisa integer NOT NULL,
   provider_ref text,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()

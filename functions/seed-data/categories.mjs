@@ -8,7 +8,7 @@ export const CATEGORIES = [
     blurb_en: "Earbuds & speakers",
     accent: "teal",
     icon: "Headphones",
-    position: 0,
+    sort_order: 0,
   },
   {
     id: "wearables",
@@ -19,7 +19,7 @@ export const CATEGORIES = [
     blurb_en: "Smartwatches & bands",
     accent: "violet",
     icon: "Watch",
-    position: 1,
+    sort_order: 1,
   },
   {
     id: "bags",
@@ -30,7 +30,7 @@ export const CATEGORIES = [
     blurb_en: "Backpacks & leather",
     accent: "gold",
     icon: "Briefcase",
-    position: 2,
+    sort_order: 2,
   },
   {
     id: "home",
@@ -41,7 +41,7 @@ export const CATEGORIES = [
     blurb_en: "Everyday living",
     accent: "rose",
     icon: "Lamp",
-    position: 3,
+    sort_order: 3,
   },
   {
     id: "beauty",
@@ -52,7 +52,7 @@ export const CATEGORIES = [
     blurb_en: "Skin & personal care",
     accent: "teal",
     icon: "Sparkles",
-    position: 4,
+    sort_order: 4,
   },
   {
     id: "gadgets",
@@ -63,6 +63,6 @@ export const CATEGORIES = [
     blurb_en: "Daily tech accessories",
     accent: "violet",
     icon: "PlugZap",
-    position: 5,
+    sort_order: 5,
   },
 ];

@@ -161,7 +161,7 @@ const USER_COLUMNS =
 const PRODUCT_COLUMNS =
   "id,slug,category_id,brand,name_bn,name_en,tagline_bn,tagline_en,description_bn,description_en,price_paisa,compare_at_paisa,stock,low_stock_threshold,rating_tenths,reviews,badge,image,image_small,status,featured,created_at,deleted_at";
 const VARIANT_COLUMNS =
-  "id,product_id,sku,option_type,option_label_bn,option_label_en,price_paisa,stock,position,swatch";
+  "id,product_id,sku,option_type,option_label_bn,option_label_en,price_paisa,stock,sort_order,swatch";
 const TEAM_COLUMNS =
   "id,name,email,phone,role_id,status,last_login_at,created_at,deleted_at,two_factor_enabled_at";
 
@@ -473,9 +473,15 @@ async function logout(db, request, origin) {
 }
 
 async function setup(db, request, config) {
-  if (!config.setupToken) throw new AppError("setup_not_configured", 503);
-  const supplied = request.headers.get("x-setup-token") ?? "";
-  if (!(await secureCompare(supplied, config.setupToken))) throw new AppError("setup_forbidden", 403);
+  if (config.setupToken) {
+    const supplied = request.headers.get("x-setup-token") ?? "";
+    if (!(await secureCompare(supplied, config.setupToken))) throw new AppError("setup_forbidden", 403);
+  } else {
+    // Without a token the very first run is still possible, but only while no
+    // account exists; after that setup is locked and needs the token again.
+    const existing = rows(await db.from("users").select("id").limit(1));
+    if (existing.length > 0) throw new AppError("setup_forbidden", 403);
+  }
 
   const limit = await consume(db, "setup", clientIp(request));
   if (!limit.allowed) return rateLimited(limit);
@@ -695,7 +701,7 @@ async function loadCatalog(db) {
   ).filter((row) => row.deleted_at == null);
   const variantRows = rows(
     await db.from("product_variants").select(VARIANT_COLUMNS).limit(500),
-  ).sort((left, right) => left.position - right.position);
+  ).sort((left, right) => left.sort_order - right.sort_order);
 
   const variantsByProduct = new Map();
   for (const variant of variantRows) {
@@ -884,10 +890,10 @@ async function route(db, request, { origin, setupToken, env }) {
     const categories = rows(
       await db
         .from("categories")
-        .select("id,slug,name_bn,name_en,blurb_bn,blurb_en,accent,icon,position")
+        .select("id,slug,name_bn,name_en,blurb_bn,blurb_en,accent,icon,sort_order")
         .limit(50),
     );
-    categories.sort((left, right) => left.position - right.position);
+    categories.sort((left, right) => left.sort_order - right.sort_order);
     return json({
       categories: categories.map((row) => ({
         id: row.id,
@@ -926,7 +932,7 @@ async function route(db, request, { origin, setupToken, env }) {
         .select(VARIANT_COLUMNS)
         .eq("product_id", found[0].id)
         .limit(50),
-    ).sort((left, right) => left.position - right.position);
+    ).sort((left, right) => left.sort_order - right.sort_order);
     return json({ product: publicProduct(found[0], variants) });
   }
 
@@ -941,10 +947,10 @@ async function route(db, request, { origin, setupToken, env }) {
     const districts = rows(
       await db
         .from("districts")
-        .select("id,name_bn,name_en,division_bn,division_en,position")
+        .select("id,name_bn,name_en,division_bn,division_en,sort_order")
         .limit(100),
     );
-    districts.sort((left, right) => left.position - right.position);
+    districts.sort((left, right) => left.sort_order - right.sort_order);
     return json({
       districts: districts.map((row) => ({
         id: row.id,
@@ -1529,7 +1535,7 @@ export function createApplication({ db, origin, setupToken, env }) {
   const resolveEnv = typeof env === "function" ? env : () => env ?? {};
 
   return async function handle(request) {
-    const siteOrigin = resolveOrigin();
+    const siteOrigin = resolveOrigin(request);
     try {
       // Provider webhooks carry no browser Origin; their HMAC signature is the
       // authentication, so the same-origin CSRF check does not apply.

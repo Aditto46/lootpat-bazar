@@ -338,7 +338,7 @@ export async function handleAdminFlashSaleUpdate(db, request, principal, saleId)
 export async function handleAdminSpin(db) {
   const settings = await readMarketingSettings(db);
   const prizes = rows(await db.from("spin_prizes").select("*").limit(20)).sort(
-    (left, right) => left.position - right.position,
+    (left, right) => left.sort_order - right.sort_order,
   );
   const spins = rows(await db.from("spin_results").select("*").limit(5000));
   return json({
@@ -351,7 +351,7 @@ export async function handleAdminSpin(db) {
       value: prize.value,
       weight: prize.weight,
       active: Boolean(prize.active),
-      position: prize.position,
+      position: prize.sort_order,
     })),
   });
 }
@@ -376,7 +376,7 @@ export async function handleAdminSpinUpdate(db, request, principal) {
               value: prize.value,
               weight: prize.weight,
               active: prize.active,
-              position: index,
+              sort_order: index,
             })
             .eq("id", prize.id)
             .select("id"),
@@ -395,7 +395,7 @@ export async function handleAdminSpinUpdate(db, request, principal) {
                 value: prize.value,
                 weight: prize.weight,
                 active: prize.active,
-                position: index,
+                sort_order: index,
                 created_at: now,
               },
               { onConflict: "id" },
@@ -957,7 +957,7 @@ export async function handleAdminCustomerUpdate(db, request, principal, phone) {
 
 export async function handleAdminBanners(db) {
   const banners = rows(await db.from("banners").select("*").limit(50)).sort(
-    (left, right) => left.position - right.position,
+    (left, right) => left.sort_order - right.sort_order,
   );
   return json({
     banners: banners.map((banner) => ({
@@ -968,7 +968,7 @@ export async function handleAdminBanners(db) {
       href: banner.href,
       tone: banner.tone,
       active: Boolean(banner.active),
-      position: banner.position,
+      position: banner.sort_order,
       startsAt: banner.starts_at ?? null,
       endsAt: banner.ends_at ?? null,
     })),
@@ -988,7 +988,7 @@ export async function handleAdminBannerCreate(db, request, principal) {
     href: body.href,
     tone: body.tone,
     active: body.active,
-    position: body.position,
+    sort_order: body.position,
     starts_at: body.startsAt ?? null,
     ends_at: body.endsAt ?? null,
     created_at: nowIso(),

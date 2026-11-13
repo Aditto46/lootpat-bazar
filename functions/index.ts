@@ -5,7 +5,9 @@ import { createApplication } from "./app.mjs";
 // this function neither reads nor trusts platform identity headers.
 const handle = createApplication({
   db: createDatabaseClient(),
-  origin: () => Deno.env.get("APP_ORIGIN"),
+  // APP_ORIGIN wins when set; otherwise the request origin is the site itself.
+  origin: (request: Request) =>
+    Deno.env.get("APP_ORIGIN") ?? new URL(request.url).origin,
   setupToken: () => Deno.env.get("SETUP_TOKEN"),
   env: () => Deno.env.toObject(),
 });

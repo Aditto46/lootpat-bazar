@@ -6,8 +6,7 @@
 --
 -- Run after 006_support.sql.
 
-ALTER TABLE app.users ADD COLUMN birth_date date;
-ALTER TABLE app.users ADD COLUMN marketing_opt_out boolean NOT NULL DEFAULT false;
+-- birth_date (text) and marketing_opt_out live in 001_init.sql.
 
 CREATE TABLE app.reviews (
   id uuid PRIMARY KEY,
@@ -17,14 +16,13 @@ CREATE TABLE app.reviews (
   user_id uuid REFERENCES app.users (id) ON DELETE SET NULL,
   customer_name text NOT NULL,
   phone text NOT NULL,
-  rating integer NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  rating integer NOT NULL,
   title text,
   body text NOT NULL,
   photo_urls text NOT NULL DEFAULT '[]',
   verified_purchase boolean NOT NULL DEFAULT false,
-  status text NOT NULL DEFAULT 'pending'
-    CHECK (status IN ('pending', 'approved', 'rejected')),
-  helpful_count integer NOT NULL DEFAULT 0 CHECK (helpful_count >= 0),
+  status text NOT NULL DEFAULT 'pending',
+  helpful_count integer NOT NULL DEFAULT 0,
   reply_body text,
   replied_at timestamptz,
   replied_by uuid REFERENCES app.users (id) ON DELETE SET NULL,
@@ -50,15 +48,13 @@ CREATE TABLE app.flash_sales (
   title_en text NOT NULL,
   subtitle_bn text NOT NULL DEFAULT '',
   subtitle_en text NOT NULL DEFAULT '',
-  discount_percent integer NOT NULL CHECK (discount_percent BETWEEN 1 AND 90),
+  discount_percent integer NOT NULL,
   banner_image text,
-  status text NOT NULL DEFAULT 'draft'
-    CHECK (status IN ('draft', 'active', 'ended')),
+  status text NOT NULL DEFAULT 'draft',
   starts_at timestamptz NOT NULL,
   ends_at timestamptz NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now(),
-  CHECK (ends_at > starts_at)
+  updated_at timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE INDEX flash_sales_status_idx ON app.flash_sales (status, starts_at, ends_at);
@@ -67,9 +63,9 @@ CREATE TABLE app.flash_sale_items (
   id uuid PRIMARY KEY,
   sale_id text NOT NULL REFERENCES app.flash_sales (id) ON DELETE CASCADE,
   product_id uuid NOT NULL REFERENCES app.products (id) ON DELETE CASCADE,
-  sale_price_paisa integer NOT NULL CHECK (sale_price_paisa > 0),
+  sale_price_paisa integer NOT NULL,
   stock_limit integer,
-  sold_count integer NOT NULL DEFAULT 0 CHECK (sold_count >= 0),
+  sold_count integer NOT NULL DEFAULT 0,
   created_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE (sale_id, product_id)
 );
@@ -80,11 +76,11 @@ CREATE TABLE app.spin_prizes (
   id text PRIMARY KEY,
   label_bn text NOT NULL,
   label_en text NOT NULL,
-  kind text NOT NULL CHECK (kind IN ('percent', 'fixed', 'free_shipping')),
-  value integer NOT NULL CHECK (value >= 0),
-  weight integer NOT NULL DEFAULT 10 CHECK (weight BETWEEN 1 AND 100),
+  kind text NOT NULL,
+  value integer NOT NULL,
+  weight integer NOT NULL DEFAULT 10,
   active boolean NOT NULL DEFAULT true,
-  position integer NOT NULL DEFAULT 0,
+  sort_order integer NOT NULL DEFAULT 0,
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
@@ -143,11 +139,11 @@ CREATE INDEX back_in_stock_alerts_product_idx ON app.back_in_stock_alerts (produ
 
 CREATE TABLE app.campaigns (
   id uuid PRIMARY KEY,
-  channel text NOT NULL CHECK (channel IN ('sms', 'email')),
+  channel text NOT NULL,
   subject text NOT NULL DEFAULT '',
   body text NOT NULL,
-  audience text NOT NULL CHECK (audience IN ('all', 'vip', 'inactive')),
-  status text NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'sent')),
+  audience text NOT NULL,
+  status text NOT NULL DEFAULT 'draft',
   recipients integer NOT NULL DEFAULT 0,
   created_by uuid REFERENCES app.users (id) ON DELETE SET NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
@@ -165,18 +161,18 @@ CREATE TABLE app.banners (
   href text NOT NULL DEFAULT '/shop',
   tone text NOT NULL DEFAULT 'teal',
   active boolean NOT NULL DEFAULT true,
-  position integer NOT NULL DEFAULT 0,
+  sort_order integer NOT NULL DEFAULT 0,
   starts_at timestamptz,
   ends_at timestamptz,
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX banners_active_idx ON app.banners (active, position);
+CREATE INDEX banners_active_idx ON app.banners (active, sort_order);
 
 CREATE TABLE app.cart_reminders (
   id uuid PRIMARY KEY,
   phone text NOT NULL,
-  item_count integer NOT NULL CHECK (item_count BETWEEN 1 AND 50),
+  item_count integer NOT NULL,
   consent boolean NOT NULL DEFAULT true,
   created_at timestamptz NOT NULL DEFAULT now()
 );
@@ -188,6 +184,6 @@ CREATE INDEX cart_reminders_phone_idx ON app.cart_reminders (phone, created_at);
 -- marketing consent.
 CREATE TABLE app.marketing_suppressions (
   contact text PRIMARY KEY,
-  channel text NOT NULL DEFAULT 'all' CHECK (channel IN ('all', 'sms', 'email')),
+  channel text NOT NULL DEFAULT 'all',
   created_at timestamptz NOT NULL DEFAULT now()
 );

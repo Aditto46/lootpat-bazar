@@ -39,7 +39,7 @@ export const SPIN_PRIZES = [
     value: 10,
     weight: 25,
     active: true,
-    position: 0,
+    sort_order: 0,
   },
   {
     id: "spin-freeship",
@@ -49,7 +49,7 @@ export const SPIN_PRIZES = [
     value: 0,
     weight: 30,
     active: true,
-    position: 1,
+    sort_order: 1,
   },
   {
     id: "spin-percent-5",
@@ -59,7 +59,7 @@ export const SPIN_PRIZES = [
     value: 5,
     weight: 30,
     active: true,
-    position: 2,
+    sort_order: 2,
   },
   {
     id: "spin-fixed-100",
@@ -69,7 +69,7 @@ export const SPIN_PRIZES = [
     value: 10000,
     weight: 15,
     active: true,
-    position: 3,
+    sort_order: 3,
   },
 ];
 
@@ -85,7 +85,7 @@ export const BANNERS = [
     href: "/shop?sort=newest",
     tone: "teal",
     active: true,
-    position: 0,
+    sort_order: 0,
     starts_at: "2026-10-01T00:00:00.000Z",
     ends_at: "2027-02-28T23:59:59.000Z",
     created_at: "2026-10-01T00:00:00.000Z",
