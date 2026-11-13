@@ -99,7 +99,7 @@ const demoReview = (id, productId, rating, title, body, name, created) => ({
   order_number: "DEMO",
   user_id: null,
   customer_name: name,
-  phone: "+8801700000000",
+  phone: "+8801410286822",
   rating,
   title,
   body,

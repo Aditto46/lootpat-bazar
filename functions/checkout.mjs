@@ -19,10 +19,10 @@ export const HISTORY_COLUMNS = "id,order_id,status,created_at";
 const DEFAULT_SETTINGS = {
   "store.name_bn": "লুটপাট বাজার",
   "store.name_en": "LootPat Bazar",
-  "store.phone": "+8801700000000",
-  "store.email": "hello@lootpat.bd",
-  "store.address_bn": "ঢাকা, বাংলাদেশ",
-  "store.address_en": "Dhaka, Bangladesh",
+  "store.phone": "+8801410286822",
+  "store.email": "adittoo2026@gmail.com",
+  "store.address_bn": "পুরান ঢাকা, বাংলাদেশ-১১০০",
+  "store.address_en": "Old Dhaka, Bangladesh 1100",
   "store.trade_license": "",
   "store.tin": "",
   "delivery.dhaka_charge_paisa": "6000",
@@ -30,9 +30,10 @@ const DEFAULT_SETTINGS = {
   "delivery.free_threshold_paisa": "200000",
   "delivery.cod_limit_paisa": "1000000",
   "delivery.cod_enabled": "true",
-  "payments.bkash_enabled": "false",
-  "payments.nagad_enabled": "false",
+  "payments.bkash_enabled": "true",
+  "payments.nagad_enabled": "true",
   "payments.sslcommerz_enabled": "false",
+  "store.payment_number": "01410286822",
 };
 
 const ORDER_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -72,6 +73,7 @@ export async function readSettings(db) {
       address: { bn: text("store.address_bn"), en: text("store.address_en") },
       tradeLicense: text("store.trade_license"),
       tin: text("store.tin"),
+      paymentNumber: text("store.payment_number"),
     },
     delivery: {
       dhakaPaisa: integer("delivery.dhaka_charge_paisa"),
@@ -82,6 +84,7 @@ export async function readSettings(db) {
     },
     payments: {
       cod: flag("delivery.cod_enabled"),
+      wallet: text("store.payment_number") !== "",
       bkash: flag("payments.bkash_enabled"),
       nagad: flag("payments.nagad_enabled"),
       sslcommerz: flag("payments.sslcommerz_enabled"),
@@ -100,6 +103,7 @@ export async function handleCheckoutConfig(db, env) {
     ...settings,
     payments: {
       cod: settings.delivery.codEnabled,
+      wallet: settings.payments.wallet,
       bkash: gateways.providers.bkash.available,
       nagad: gateways.providers.nagad.available,
       sslcommerz: gateways.providers.sslcommerz.available,
@@ -430,6 +434,10 @@ export async function handleCreateOrder(db, request, userId, context) {
   if (body.paymentMethod === "cod") {
     if (!settings.delivery.codEnabled) {
       return json({ error: "payment_method_unavailable", method: "cod" }, 409);
+    }
+  } else if (body.paymentMethod === "wallet") {
+    if (!settings.payments.wallet) {
+      return json({ error: "payment_method_unavailable", method: "wallet" }, 409);
     }
   } else if (!gateways.providers[body.paymentMethod]?.available) {
     return json({ error: "payment_method_unavailable", method: body.paymentMethod }, 409);

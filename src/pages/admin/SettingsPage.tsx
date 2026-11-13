@@ -25,6 +25,7 @@ type Draft = {
   addressEn: string;
   tradeLicense: string;
   tin: string;
+  paymentNumber: string;
   dhakaCharge: string;
   outsideCharge: string;
   freeThreshold: string;
@@ -52,6 +53,7 @@ function toDraft(settings: AdminSettings): Draft {
     addressEn: settings.store.addressEn,
     tradeLicense: settings.store.tradeLicense,
     tin: settings.store.tin,
+    paymentNumber: settings.store.paymentNumber,
     dhakaCharge: taka(settings.delivery.dhakaChargePaisa),
     outsideCharge: taka(settings.delivery.outsideChargePaisa),
     freeThreshold: taka(settings.delivery.freeThresholdPaisa),
@@ -145,6 +147,10 @@ export function SettingsPage() {
     if (current.email.trim() && !EMAIL_PATTERN.test(current.email.trim())) {
       next.email = t("admin.settings.errorEmail");
     }
+    const paymentNumber = current.paymentNumber.trim();
+    if (paymentNumber && (paymentNumber.length < 6 || !/^\+?[0-9][0-9\s()-]*$/.test(paymentNumber))) {
+      next.paymentNumber = t("admin.settings.errorPhone");
+    }
     const moneyKeys: MoneyKey[] = ["dhakaCharge", "outsideCharge", "freeThreshold", "codLimit"];
     for (const key of moneyKeys) {
       if (toPaisa(current[key]) === null) next[key] = t("admin.settings.errorAmount");
@@ -171,6 +177,7 @@ export function SettingsPage() {
         addressEn: draft.addressEn.trim(),
         tradeLicense: draft.tradeLicense.trim(),
         tin: draft.tin.trim(),
+        paymentNumber: draft.paymentNumber.trim(),
       },
       delivery: {
         dhakaChargePaisa: money(draft.dhakaCharge),
@@ -277,6 +284,22 @@ export function SettingsPage() {
                     disabled={!canWrite || saving}
                     onChange={(event) => set("email", event.target.value)}
                     aria-invalid={errors.email ? true : undefined}
+                    className={fieldClass}
+                  />
+                </Field>
+                <Field
+                  id="settings-paymentNumber"
+                  label={t("admin.settings.paymentNumber")}
+                  error={errors.paymentNumber}
+                >
+                  <input
+                    id="settings-paymentNumber"
+                    type="tel"
+                    value={draft.paymentNumber}
+                    maxLength={24}
+                    disabled={!canWrite || saving}
+                    onChange={(event) => set("paymentNumber", event.target.value)}
+                    aria-invalid={errors.paymentNumber ? true : undefined}
                     className={fieldClass}
                   />
                 </Field>

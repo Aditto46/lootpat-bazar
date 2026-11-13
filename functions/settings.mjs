@@ -21,6 +21,7 @@ const STORE_FIELDS = {
   addressEn: "store.address_en",
   tradeLicense: "store.trade_license",
   tin: "store.tin",
+  paymentNumber: "store.payment_number",
 };
 
 const DELIVERY_FIELDS = {
@@ -61,6 +62,7 @@ function settingsPayload(raw, env) {
       addressEn: raw.store.address.en,
       tradeLicense: raw.store.tradeLicense,
       tin: raw.store.tin,
+      paymentNumber: raw.store.paymentNumber,
     },
     delivery: {
       dhakaChargePaisa: raw.delivery.dhakaPaisa,

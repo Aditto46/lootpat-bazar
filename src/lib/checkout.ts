@@ -4,8 +4,8 @@ import type { Localized } from "./catalog";
 import type { DictKey } from "./i18n";
 import { isDhaka, type District } from "./locations";
 
-export type PaymentMethodId = "cod" | "bkash" | "nagad" | "sslcommerz";
-export type OnlineMethodId = Exclude<PaymentMethodId, "cod">;
+export type PaymentMethodId = "cod" | "wallet" | "bkash" | "nagad" | "sslcommerz";
+export type OnlineMethodId = "bkash" | "nagad" | "sslcommerz";
 
 export type GatewayProvider = {
   label: string;
@@ -22,6 +22,7 @@ export type CheckoutConfig = {
     address: Localized;
     tradeLicense: string;
     tin: string;
+    paymentNumber: string;
   };
   delivery: {
     dhakaPaisa: number;

@@ -43,6 +43,7 @@ import { AdminShell, PaymentPill, StatusPill } from "./AdminShell";
 
 const METHOD_KEYS: Record<PaymentMethodId, DictKey> = {
   cod: "checkout.cod",
+  wallet: "checkout.wallet",
   bkash: "checkout.bkash",
   nagad: "checkout.nagad",
   sslcommerz: "checkout.card",
@@ -795,6 +796,11 @@ export function OrdersPage() {
                   <h3 id="detail-payment" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     {t("admin.orders.paymentTitle")}
                   </h3>
+                  {detail.order.paymentMethod === "wallet" ? (
+                    <p className="mt-2 text-[0.68rem] leading-relaxed text-muted-foreground">
+                      {t("admin.orders.walletHint")}
+                    </p>
+                  ) : null}
                   {canManagePayments ? (
                     <div className="mt-2">
                       <label htmlFor="payment-status" className="sr-only">

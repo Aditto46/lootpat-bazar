@@ -116,9 +116,9 @@ export const FAQ_ENTRIES = [
     question_bn: "সরাসরি কার সাথে কথা বলব?",
     question_en: "How can I reach a person?",
     answer_bn:
-      "হটলাইন +৮৮০ ১৭০০-০০০০০০ (শনি–বৃহস্পতি, সকাল ১০টা – রাত ৮টা)। চাইলে এখানেই এজেন্টের সাথে লাইভ চ্যাট করতে পারেন — \"এজেন্ট\" লিখে পাঠান।",
+      "হটলাইন +৮৮০ ১৪১০-২৮৬৮২২ (শনি–বৃহস্পতি, সকাল ১০টা – রাত ৮টা)। চাইলে এখানেই এজেন্টের সাথে লাইভ চ্যাট করতে পারেন — \"এজেন্ট\" লিখে পাঠান।",
     answer_en:
-      "Call +880 1700-000000 (Sat–Thu, 10am–8pm). You can also chat live with an agent here — type \"agent\" to be connected.",
+      "Call +880 1410-286822 (Sat–Thu, 10am–8pm). You can also chat live with an agent here — type \"agent\" to be connected.",
     keywords: "contact,যোগাযোগ,হটলাইন,hotline,ফোন,phone,whatsapp,সাপোর্ট,support",
     category: "general",
     position: 10,

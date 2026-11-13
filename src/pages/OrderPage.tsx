@@ -40,6 +40,7 @@ type PageState = "loading" | "ready" | "not_found" | "error";
 
 const METHOD_LABELS: Record<PaymentMethodId, DictKey> = {
   cod: "checkout.cod",
+  wallet: "checkout.wallet",
   bkash: "checkout.bkash",
   nagad: "checkout.nagad",
   sslcommerz: "checkout.card",
@@ -98,7 +99,14 @@ export function OrderPage({ orderNumber }: { orderNumber: string }) {
   }
 
   async function payNow() {
-    if (!order || order.paymentMethod === "cod" || payBusy) return;
+    if (
+      !order ||
+      order.paymentMethod === "cod" ||
+      order.paymentMethod === "wallet" ||
+      payBusy
+    ) {
+      return;
+    }
     const lookup = token ?? readOrderToken(orderNumber);
     if (!lookup) {
       setPayError(t("order.payTokenMissing"));
@@ -436,6 +444,32 @@ export function OrderPage({ orderNumber }: { orderNumber: string }) {
                   amount: formatTaka(order.totals.totalPaisa / 100, lang),
                 })}
               </p>
+            ) : order.paymentMethod === "wallet" && !terminal ? (
+              <div className="mt-3 rounded-xl border border-[color-mix(in_srgb,var(--brand-gold)_40%,transparent)] bg-[color-mix(in_srgb,var(--brand-gold)_10%,transparent)] px-3.5 py-3">
+                <p className="text-sm font-semibold text-foreground">
+                  {t("order.walletTitle")}
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  {t("order.walletBody", {
+                    amount: formatTaka(order.totals.totalPaisa / 100, lang),
+                  })}
+                </p>
+                <p
+                  dir="ltr"
+                  className="mt-2 select-all font-mono text-lg font-bold tracking-wide text-foreground"
+                >
+                  {config?.store.paymentNumber || "—"}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t("order.walletReference")}:{" "}
+                  <span className="select-all font-mono font-semibold text-foreground">
+                    {order.orderNumber}
+                  </span>
+                </p>
+                <p className="mt-2 text-[0.7rem] leading-relaxed text-muted-foreground">
+                  {t("order.walletPending")}
+                </p>
+              </div>
             ) : order.paymentStatus === "paid" ? (
               <p className="mt-3 flex items-start gap-2 rounded-xl bg-[color-mix(in_srgb,var(--brand-teal)_12%,transparent)] px-3.5 py-2.5 text-sm font-semibold text-foreground">
                 <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[var(--brand-teal)]" />

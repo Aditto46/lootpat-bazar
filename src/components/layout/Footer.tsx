@@ -1,4 +1,4 @@
-import { Clock, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { Clock, Mail, MapPin, Phone, ShieldCheck, Wallet } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -89,8 +89,9 @@ export function Footer() {
   const { t, lang } = useI18n();
   const { config } = useCheckoutConfig();
   const year = new Date().getFullYear();
-  const storeEmail = config?.store.email || "support@lootpatbazar.com";
+  const storeEmail = config?.store.email || "adittoo2026@gmail.com";
   const storePhone = config?.store.phone ?? "";
+  const storePaymentNumber = config?.store.paymentNumber ?? "";
   const storeAddress = config?.store.address[lang] ?? "ঢাকা, বাংলাদেশ";
 
   return (
@@ -177,9 +178,15 @@ export function Footer() {
                 {storePhone}
               </a>
             ) : null}
-            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              {t("footer.sampleNote")}
-            </p>
+            {storePaymentNumber ? (
+              <p
+                dir="ltr"
+                className="mt-2 flex items-center gap-2 text-sm text-muted-foreground"
+              >
+                <Wallet aria-hidden="true" className="size-4 shrink-0" />
+                {t("footer.paymentNumber", { number: storePaymentNumber })}
+              </p>
+            ) : null}
             <UnsubscribeLink />
           </div>
         </div>

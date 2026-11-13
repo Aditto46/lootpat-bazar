@@ -46,7 +46,7 @@ function stockOf(db, table, id) {
   return db.dump(table).find((row) => row.id === id).stock;
 }
 
-test("checkout config exposes real delivery economics and COD only", async () => {
+test("checkout config exposes real delivery economics and enabled gateways", async () => {
   const { app } = await seededApp();
   const response = await call(app, "GET", "/api/checkout/config");
   assert.equal(response.status, 200);
@@ -56,7 +56,11 @@ test("checkout config exposes real delivery economics and COD only", async () =>
   assert.equal(response.json.delivery.freeThresholdPaisa, 200000);
   assert.equal(response.json.delivery.codLimitPaisa, 1000000);
   assert.equal(response.json.payments.cod, true);
-  assert.equal(response.json.payments.bkash, false);
+  assert.equal(response.json.payments.wallet, true);
+  assert.equal(response.json.payments.bkash, true);
+  assert.equal(response.json.payments.nagad, true);
+  assert.equal(response.json.payments.sslcommerz, false);
+  assert.equal(response.json.store.paymentNumber, "01410286822");
 });
 
 test("COD order recomputes totals, reserves stock and stays private", async () => {
@@ -262,12 +266,15 @@ test("client-sent totals and unavailable payment methods are rejected", async ()
   assert.equal(tampered.status, 400);
   assert.equal(tampered.json.error, "invalid_input");
 
-  const bkash = await call(app, "POST", "/api/orders", {
-    body: body({ paymentMethod: "bkash", customer: { ...body().customer, phone: "01712345676" } }),
+  const card = await call(app, "POST", "/api/orders", {
+    body: body({
+      paymentMethod: "sslcommerz",
+      customer: { ...body().customer, phone: "01712345676" },
+    }),
     ip: "198.51.100.72",
   });
-  assert.equal(bkash.status, 409);
-  assert.equal(bkash.json.error, "payment_method_unavailable");
+  assert.equal(card.status, 409);
+  assert.equal(card.json.error, "payment_method_unavailable");
 });
 
 test("order tracking needs the matching phone and is rate limited", async () => {

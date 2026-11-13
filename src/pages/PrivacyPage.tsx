@@ -20,7 +20,7 @@ const SECTIONS: Section[] = [
 export function PrivacyPage() {
   const { t } = useI18n();
   const { config } = useCheckoutConfig();
-  const storeEmail = config?.store.email || "support@lootpatbazar.com";
+  const storeEmail = config?.store.email || "adittoo2026@gmail.com";
 
   return (
     <section className="container-page pt-6 pb-20 sm:pt-10">

@@ -538,6 +538,14 @@ export function CheckoutPage() {
                     enabled: codAvailable,
                   },
                   {
+                    id: "wallet" as const,
+                    label: t("checkout.wallet"),
+                    body: t("checkout.walletBody", {
+                      number: config?.store.paymentNumber ?? "",
+                    }),
+                    enabled: config?.payments.wallet ?? false,
+                  },
+                  {
                     id: "bkash" as const,
                     label: t("checkout.bkash"),
                     body: t("checkout.payOnline", { provider: t("checkout.bkash") }),
@@ -597,6 +605,15 @@ export function CheckoutPage() {
                 );
               })}
             </div>
+            {config?.gateway.mode === "sandbox" &&
+            (config?.payments.bkash || config?.payments.nagad) ? (
+              <p
+                role="status"
+                className="mt-3 rounded-xl border border-[color-mix(in_srgb,var(--brand-gold)_40%,transparent)] bg-[color-mix(in_srgb,var(--brand-gold)_10%,transparent)] px-3.5 py-2.5 text-xs leading-relaxed text-muted-foreground"
+              >
+                {t("checkout.sandboxNote")}
+              </p>
+            ) : null}
             {codBlocked ? (
               <p
                 role="alert"

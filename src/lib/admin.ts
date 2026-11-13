@@ -83,6 +83,7 @@ export type AdminSettings = {
     addressEn: string;
     tradeLicense: string;
     tin: string;
+    paymentNumber: string;
   };
   delivery: {
     dhakaChargePaisa: number;

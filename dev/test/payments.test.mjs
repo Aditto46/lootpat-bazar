@@ -89,8 +89,9 @@ test("store settings are readable by staff but payment flags are owner-only", as
   const viewerRead = await call(app, "GET", "/api/admin/settings", { cookie: viewerCookie });
   assert.equal(viewerRead.status, 200);
   assert.equal(viewerRead.json.environment.mode, "sandbox");
-  assert.equal(viewerRead.json.payments.bkashEnabled, false);
+  assert.equal(viewerRead.json.payments.bkashEnabled, true);
   assert.equal(viewerRead.json.store.nameBn, "লুটপাট বাজার");
+  assert.equal(viewerRead.json.store.paymentNumber, "01410286822");
 
   const adminCookie = await addStaff(app, ownerCookie, "admin", "admin@lootpat.test");
   const adminStorePatch = await call(app, "PATCH", "/api/admin/settings", {
@@ -119,6 +120,11 @@ test("store settings are readable by staff but payment flags are owner-only", as
 
 test("owner enabling a gateway is audited and reaches the checkout config", async () => {
   const { app, ownerCookie } = await ownerApp();
+  const disabled = await call(app, "PATCH", "/api/admin/settings", {
+    cookie: ownerCookie,
+    body: { payments: { bkashEnabled: false } },
+  });
+  assert.equal(disabled.status, 200, JSON.stringify(disabled.json));
 
   const before = await call(app, "GET", "/api/checkout/config");
   assert.equal(before.json.payments.bkash, false);
@@ -138,10 +144,63 @@ test("owner enabling a gateway is audited and reaches the checkout config", asyn
 });
 
 test("online checkout is refused while the gateway flag is off", async () => {
-  const { app } = await ownerApp();
+  const { app, ownerCookie } = await ownerApp();
+  const disabled = await call(app, "PATCH", "/api/admin/settings", {
+    cookie: ownerCookie,
+    body: { payments: { bkashEnabled: false } },
+  });
+  assert.equal(disabled.status, 200, JSON.stringify(disabled.json));
   const rejected = await call(app, "POST", "/api/orders", {
     body: orderBody("bkash"),
     ip: "198.51.100.62",
+  });
+  assert.equal(rejected.status, 409);
+  assert.equal(rejected.json.error, "payment_method_unavailable");
+});
+
+test("manual wallet orders stay unpaid until the owner confirms", async () => {
+  const { app, ownerCookie } = await ownerApp();
+  const created = await call(app, "POST", "/api/orders", {
+    body: orderBody("wallet"),
+    ip: "198.51.100.67",
+  });
+  assert.equal(created.status, 201, JSON.stringify(created.json));
+  assert.equal(created.json.order.paymentMethod, "wallet");
+  assert.equal(created.json.order.paymentStatus, "unpaid");
+
+  const adminCookie = await addStaff(app, ownerCookie, "admin", "wallet-admin@lootpat.test");
+  const denied = await call(
+    app,
+    "PATCH",
+    `/api/admin/orders/${created.json.order.orderNumber}/payment`,
+    { cookie: adminCookie, body: { paymentStatus: "paid" } },
+  );
+  assert.equal(denied.status, 403);
+
+  const confirmed = await call(
+    app,
+    "PATCH",
+    `/api/admin/orders/${created.json.order.orderNumber}/payment`,
+    { cookie: ownerCookie, body: { paymentStatus: "paid", note: "bKash TrxID 9F7A" } },
+  );
+  assert.equal(confirmed.status, 200, JSON.stringify(confirmed.json));
+  assert.equal(confirmed.json.order.paymentStatus, "paid");
+
+  const audit = await call(app, "GET", "/api/admin/audit", { cookie: ownerCookie });
+  assert.ok(audit.json.entries.some((row) => row.action === "order.payment"));
+});
+
+test("wallet checkout is refused when no wallet number is configured", async () => {
+  const { app, ownerCookie } = await ownerApp();
+  const cleared = await call(app, "PATCH", "/api/admin/settings", {
+    cookie: ownerCookie,
+    body: { store: { paymentNumber: "" } },
+  });
+  assert.equal(cleared.status, 200, JSON.stringify(cleared.json));
+
+  const rejected = await call(app, "POST", "/api/orders", {
+    body: orderBody("wallet"),
+    ip: "198.51.100.68",
   });
   assert.equal(rejected.status, 409);
   assert.equal(rejected.json.error, "payment_method_unavailable");

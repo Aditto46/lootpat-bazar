@@ -31,7 +31,7 @@ Step 4 delivered the cart, one-page checkout and cash-on-delivery ordering:
 - Server-authoritative order creation: prices, discount, shipping and totals are recomputed from the database; stock is reserved with compare-and-swap updates and restored if anything fails; duplicate submits are collapsed by idempotency key
 - `/order/:number` confirmation with a private lookup token (also persisted locally), itemised totals, order journey timeline and estimated arrival
 - `/track` recovery by order number plus the matching phone, and an order history block on `/account` for signed-in customers
-- Coupons `WELCOME10` (10%, min ৳1,000) and `FREESHIP` (min ৳1,500) are seeded; free delivery starts at ৳2,000 and COD is capped at ৳10,000
+- Coupons `WELCOME10` (10%, min ৳1,000) and `FREESHIP` (min ৳1,500) are seeded; free delivery starts at ৳2,500 and COD is capped at ৳10,000
 - Rate limits for checkout per IP and per phone, coupon validation, order lookup and tracking
 
 Step 5 delivered the owner admin panel:
@@ -113,24 +113,31 @@ Everything below is seed content. Edit it in `/admin/settings` (owner or `settin
 | Store name (English) | LootPat Bazar | `/admin/settings`, seed `:6` | Logo subtitle, meta title |
 | Hotline / phone | +8801410286822 | `/admin/settings`, seed `:7` | Footer contact, chat widget call + WhatsApp, privacy contact |
 | Support email | adittoo2026@gmail.com | `/admin/settings`, seed `:8` | Footer `mailto:`, privacy contact |
-| Address (Bangla) | পুরান ঢাকা, বাংলাদেশ-১১০০ । | `/admin/settings`, seed `:9` | Footer help column |
-| Address (English) | puran dhaka-1100 | `/admin/settings`, seed `:10` | English footer |
+| Address (Bangla) | পুরান ঢাকা, বাংলাদেশ-১১০০ | `/admin/settings`, seed `:9` | Footer help column |
+| Address (English) | Old Dhaka, Bangladesh 1100 | `/admin/settings`, seed `:10` | English footer |
 | Support hours | শনি–বৃহস্পতি, সকাল ১০টা – রাত ৮টা | `src/lib/i18n.tsx` (`footer.hours`, `chat.officeHours`) and the contact FAQ in `functions/seed-data/support.mjs:119` | Footer, chat header, FAQ answer |
 | WhatsApp | derived from the phone setting | `/admin/settings` — digits only | Chat widget |
-| Trade licence | TRAD/DNCC/000000/2026 | `/admin/settings`, seed `:11` | Stored only (not displayed yet) |
-| TIN | 000000000000 | `/admin/settings`, seed `:12` | Stored only (not displayed yet) |
+| Trade licence | blank (hidden by request) | `/admin/settings`, seed `:11` | Not displayed anywhere |
+| TIN | blank (hidden by request) | `/admin/settings`, seed `:12` | Not displayed anywhere |
 | Delivery — Dhaka | ৳80 | `/admin/settings` | Checkout summary, order totals |
 | Delivery — outside Dhaka | ৳120 | `/admin/settings` | Checkout summary, order totals |
 | Free delivery from | ৳2,500 merchandise value | `/admin/settings` | Cart progress bar, checkout |
 | Cash-on-delivery limit | ৳10,000 | `/admin/settings` | Checkout payment step |
-| Payment methods | COD on; bKash / Nagad / SSLCommerz off | `/admin/settings` (gateway switches are owner-only) | Checkout, footer badges |
-| Demo notice | “ডেমো দোকান — যোগাযোগের তথ্য নমুনা।” | `src/lib/i18n.tsx` → `footer.sampleNote` | Footer — remove once real details are in |
+| Payment methods | COD on; bKash/Nagad Send Money (manual) on; bKash/Nagad gateways on (sandbox); SSLCommerz off | `/admin/settings` (gateway switches are owner-only) | Checkout, footer badges |
+| bKash / Nagad number | 01410286822 | `/admin/settings` → bKash/Nagad number, seed `:26` | Footer contact column |
+| Demo notice | removed — real details are live | `src/lib/i18n.tsx` | — |
 
 Use a mobile number in international form (`+8801410286822`); the WhatsApp link is built from its digits. The support hours are copy, not a setting, so tell me the real opening hours and I will update all three places together.
 
+### Manual bKash/Nagad (admin-confirmed)
+
+Checkout offers **bKash/Nagad (Send Money)**: the customer sends the exact total to the wallet number from `/admin/settings` → *bKash/Nagad number* (seed `store.payment_number`), keeps the order number as the reference, and the order stays `unpaid`. The owner opens the order sheet in `/admin/orders`, checks the transfer, then sets payment status to `paid`; the change is audited. This path needs no gateway credentials.
+
+The bKash/Nagad **gateway** buttons stay in sandbox until `PAYMENTS_MODE=live` and merchant credentials exist, and checkout shows a notice that no money is charged there. To switch, set `PAYMENTS_MODE=live` plus `BKASH_*` / `NAGAD_*` secrets and deploy migration `009_manual_payments.sql`.
+
 ## Logo and product media
 
-**Logo.** Drop the brand file at `public/logo.png` (recommended, 512×512 or 1024×1024, transparent) or `public/logo.svg`. `src/components/common/Logo.tsx` tries `logo.png`, then `logo.svg`, then falls back to the built-in gradient mark, so replacing the file is enough — no code change. The wordmark next to it stays bilingual on purpose. Favicons live at `public/favicon.svg` (referenced from `index.html:18`).
+**Logo.** The shop logo is `public/logo.svg` — the gradient bag tile from `lootpat-bazar-logo-3d.svg`, cropped to a transparent square so it stays crisp at the 36 px header size. `src/components/common/Logo.tsx` tries `logo.png`, then `logo.svg`, then falls back to the built-in gradient mark, so replacing the file is enough — no code change. The bilingual wordmark next to it is rendered as HTML text. `public/favicon.svg` uses the same mark (referenced from `index.html:18`).
 
 **Product images.** New listings are entered in the product editor (`/admin/products/new`) as a site path or HTTPS URL. To match the seeded catalogue:
 
@@ -291,6 +298,7 @@ database/
   006_support.sql support conversations, messages, canned replies and FAQ entries
   007_marketing.sql reviews, flash sales, spin prizes, loyalty, customers, campaigns and alerts
   008_security.sql TOTP secrets, recovery codes, login challenges, backups and security settings
+  009_manual_payments.sql adds the manual bKash/Nagad "wallet" payment method to orders
 functions/
   index.ts        Deno entry (createSiteContext + app router)
   app.mjs         routes, auth, RBAC, catalog, order and admin handlers
@@ -338,7 +346,7 @@ Payment gateway on/off flags are stored in the database and toggled only by the 
 The site is static files plus one Deno Edge Function on a managed Postgres backend, so a release has five steps.
 
 1. **Environment.** Add the values from `.env.example` as Qoder Sites Function secrets: `APP_ORIGIN` (the exact public HTTPS origin, e.g. `https://lootpatbazar.qoder.site`), `SETUP_TOKEN`, `SESSION_SECRET`, `WEBHOOK_SECRET`. Payment, courier and SMS credentials are optional; without them those integrations simply report as unconfigured. Nothing from this file is ever bundled into `dist/`.
-2. **Database.** Apply `database/001_init.sql` through `008_security.sql` in order with the Sites migration tool. DDL is idempotent and confined to the `app` schema.
+2. **Database.** Apply `database/001_init.sql` through `009_manual_payments.sql` in order with the Sites migration tool. DDL is idempotent and confined to the `app` schema.
 3. **Build.** `npm run build` runs `tsc --noEmit` and then writes `dist/`. Use `dist` as the site's `webDirectory`; `functions/index.ts` is the Function entry.
 4. **Publish.** Prepare and publish the site. Every API call is same-origin under `/functions/v1/app`, which is why `APP_ORIGIN` must match the published origin exactly or cookies and CSRF checks fail.
 5. **First run.** Call setup once with the token; it seeds the catalogue, settings, coupons and FAQ and creates the single owner account.
@@ -354,9 +362,9 @@ Rotate `SETUP_TOKEN` once setup succeeds. The first admin sign-in forces TOTP en
 
 ### Post-launch checklist
 
-- [ ] `/admin/settings`: real name, hotline, email, address and delivery charges (see the review table above)
-- [ ] Logo at `public/logo.png` or `public/logo.svg`, favicon at `public/favicon.svg`
-- [ ] Remove the demo notice (`footer.sampleNote`) once the contact details are real
+- [x] `/admin/settings`: real name, hotline, email, address and delivery charges (see the review table above)
+- [x] Logo at `public/logo.svg`, favicon at `public/favicon.svg`
+- [x] Demo notice removed — contact details are real
 - [ ] Place one COD order end-to-end and advance it through the kanban
 - [ ] Track that order from `/track` with its number and phone
 - [ ] Sandbox payment on `/pay/:number`, then, only when ready, set `PAYMENTS_MODE=live`, add gateway secrets and let the owner flip the gateway flags

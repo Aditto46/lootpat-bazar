@@ -4,12 +4,12 @@
 export const SETTINGS = [
   { key: "store.name_bn", value: "লুটপাট বাজার" },
   { key: "store.name_en", value: "LootPat Bazar" },
-  { key: "store.phone", value: "+8801700000000" },
-  { key: "store.email", value: "hello@lootpat.bd" },
-  { key: "store.address_bn", value: "লেভেল ৪, ১২/এ, রোড ২৭, ধানমন্ডি, ঢাকা ১২০৯" },
-  { key: "store.address_en", value: "Level 4, 12/A, Road 27, Dhanmondi, Dhaka 1209" },
-  { key: "store.trade_license", value: "TRAD/DNCC/000000/2026" },
-  { key: "store.tin", value: "000000000000" },
+  { key: "store.phone", value: "+8801410286822" },
+  { key: "store.email", value: "adittoo2026@gmail.com" },
+  { key: "store.address_bn", value: "পুরান ঢাকা, বাংলাদেশ-১১০০" },
+  { key: "store.address_en", value: "Old Dhaka, Bangladesh 1100" },
+  { key: "store.trade_license", value: "" },
+  { key: "store.tin", value: "" },
 
   // Dhaka city ৳60, everywhere else ৳120, free from ৳2,000 merchandise value.
   { key: "delivery.dhaka_charge_paisa", value: "6000" },
@@ -18,10 +18,11 @@ export const SETTINGS = [
   { key: "delivery.cod_limit_paisa", value: "1000000" },
   { key: "delivery.cod_enabled", value: "true" },
 
-  // Online gateways arrive in step 6; the API refuses them until enabled.
-  { key: "payments.bkash_enabled", value: "false" },
-  { key: "payments.nagad_enabled", value: "false" },
+  // bKash and Nagad are on for launch; SSLCommerz waits for merchant setup.
+  { key: "payments.bkash_enabled", value: "true" },
+  { key: "payments.nagad_enabled", value: "true" },
   { key: "payments.sslcommerz_enabled", value: "false" },
+  { key: "store.payment_number", value: "01410286822" },
 
   // Step 9: an empty allowlist means every IP may reach /admin; adding entries
   // restricts staff APIs to the listed IPv4/IPv6 addresses or IPv4 CIDR blocks.

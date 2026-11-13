@@ -245,7 +245,7 @@ export const checkoutSchema = z
     items: z.array(checkoutItemSchema).min(1).max(20),
     customer: checkoutCustomerSchema,
     couponCode: couponCodeValue.optional(),
-    paymentMethod: z.enum(["cod", "bkash", "nagad", "sslcommerz"]),
+    paymentMethod: z.enum(["cod", "wallet", "bkash", "nagad", "sslcommerz"]),
     idempotencyKey: uuidValue.optional(),
   })
   .strict()
@@ -497,6 +497,7 @@ export const adminSettingsSchema = z
         addressEn: settingsText(200).optional(),
         tradeLicense: settingsText(60).optional(),
         tin: settingsText(30).optional(),
+        paymentNumber: settingsPhone.optional().or(z.literal("")),
       })
       .strict()
       .optional(),
