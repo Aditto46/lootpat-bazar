@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
  * Drop your own mark at `public/logo.png` (or `public/logo.svg`) to replace the
  * built-in gradient icon. The fallback stays visible until a file is present.
  */
-const LOGO_CANDIDATES = ["/logo.png", "/logo.svg"] as const;
+const LOGO_CANDIDATES = ["/logo.svg", "/logo.png"] as const;
 
 function FallbackMark({ className }: { className?: string }) {
   const gradientId = `lp-mark-${useId().replace(/:/g, "")}`;

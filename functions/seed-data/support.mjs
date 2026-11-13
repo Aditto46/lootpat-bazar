@@ -4,7 +4,7 @@
 
 export const FAQ_ENTRIES = [
   {
-    id: "faq-delivery-time",
+    id: "3a7c1e90-0000-4000-8000-000000000001",
     question_bn: "ডেলিভারি কত দিনে পাব?",
     question_en: "How long does delivery take?",
     answer_bn:
@@ -16,7 +16,7 @@ export const FAQ_ENTRIES = [
     sort_order: 1,
   },
   {
-    id: "faq-delivery-charge",
+    id: "3a7c1e90-0000-4000-8000-000000000002",
     question_bn: "ডেলিভারি চার্জ কত?",
     question_en: "What is the delivery charge?",
     answer_bn:
@@ -28,7 +28,7 @@ export const FAQ_ENTRIES = [
     sort_order: 2,
   },
   {
-    id: "faq-return",
+    id: "3a7c1e90-0000-4000-8000-000000000003",
     question_bn: "রিটার্ন বা এক্সচেঞ্জ করা যাবে?",
     question_en: "Can I return or exchange an item?",
     answer_bn:
@@ -40,7 +40,7 @@ export const FAQ_ENTRIES = [
     sort_order: 3,
   },
   {
-    id: "faq-payment",
+    id: "3a7c1e90-0000-4000-8000-000000000004",
     question_bn: "কী কী পেমেন্ট করা যায়?",
     question_en: "Which payment methods are available?",
     answer_bn:
@@ -52,7 +52,7 @@ export const FAQ_ENTRIES = [
     sort_order: 4,
   },
   {
-    id: "faq-cod",
+    id: "3a7c1e90-0000-4000-8000-000000000005",
     question_bn: "ক্যাশ অন ডেলিভারি সীমা কত?",
     question_en: "What is the cash-on-delivery limit?",
     answer_bn:
@@ -64,7 +64,7 @@ export const FAQ_ENTRIES = [
     sort_order: 5,
   },
   {
-    id: "faq-tracking",
+    id: "3a7c1e90-0000-4000-8000-000000000006",
     question_bn: "অর্ডারের স্ট্যাটাস কীভাবে দেখব?",
     question_en: "How do I check my order status?",
     answer_bn:
@@ -76,7 +76,7 @@ export const FAQ_ENTRIES = [
     sort_order: 6,
   },
   {
-    id: "faq-cancel",
+    id: "3a7c1e90-0000-4000-8000-000000000007",
     question_bn: "অর্ডার বাতিল করা যাবে?",
     question_en: "Can I cancel my order?",
     answer_bn:
@@ -88,7 +88,7 @@ export const FAQ_ENTRIES = [
     sort_order: 7,
   },
   {
-    id: "faq-coupon",
+    id: "3a7c1e90-0000-4000-8000-000000000008",
     question_bn: "কুপন কোড কীভাবে ব্যবহার করব?",
     question_en: "How do I use a coupon code?",
     answer_bn:
@@ -100,7 +100,7 @@ export const FAQ_ENTRIES = [
     sort_order: 8,
   },
   {
-    id: "faq-warranty",
+    id: "3a7c1e90-0000-4000-8000-000000000009",
     question_bn: "পণ্য কি আসল ও ওয়ারেন্টিসহ?",
     question_en: "Are the products genuine and under warranty?",
     answer_bn:
@@ -112,7 +112,7 @@ export const FAQ_ENTRIES = [
     sort_order: 9,
   },
   {
-    id: "faq-contact",
+    id: "3a7c1e90-0000-4000-8000-000000000010",
     question_bn: "সরাসরি কার সাথে কথা বলব?",
     question_en: "How can I reach a person?",
     answer_bn:
@@ -127,42 +127,42 @@ export const FAQ_ENTRIES = [
 
 export const CANNED_REPLIES = [
   {
-    id: "canned-greeting",
+    id: "6b2f8d34-0000-4000-8000-000000000001",
     title: "স্বাগতম",
     body: "ধন্যবাদ যোগাযোগের জন্য! আপনার প্রশ্নটি পেয়েছি — একটু বিস্তারিত লিখলে দ্রুত সাহায্য করতে পারব।",
     locale: "bn",
     sort_order: 1,
   },
   {
-    id: "canned-order-check",
+    id: "6b2f8d34-0000-4000-8000-000000000002",
     title: "অর্ডার তথ্য চাওয়া",
     body: "অর্ডারটি খুঁজে বের করতে অর্ডার নম্বর (LP-XXXXXX-XXXXXX) এবং যে মোবাইল নম্বর দিয়ে অর্ডার করেছিলেন সেটি জানান।",
     locale: "bn",
     sort_order: 2,
   },
   {
-    id: "canned-delivery",
+    id: "6b2f8d34-0000-4000-8000-000000000003",
     title: "ডেলিভারি আপডেট",
     body: "আপনার অর্ডারটি কুরিয়ারে দেওয়া হয়েছে। ঢাকায় ২৪ ঘণ্টা এবং ঢাকার বাইরে ২–৩ কর্মদিবসে পৌঁছাবে। ট্র্যাকিং নম্বরটি SMS-এ পাঠানো হয়েছে।",
     locale: "bn",
     sort_order: 3,
   },
   {
-    id: "canned-return",
+    id: "6b2f8d34-0000-4000-8000-000000000004",
     title: "রিটার্ন নির্দেশনা",
     body: "পণ্য অব্যবহৃত ও ট্যাগ অক্ষত থাকলে ডেলিভারির ৭ দিনের মধ্যে রিটার্ন করা যাবে। ছবি ও অর্ডার নম্বর পাঠালে আমরা রিটার্ন রিকোয়েস্ট খুলে দেব।",
     locale: "bn",
     sort_order: 4,
   },
   {
-    id: "canned-greeting-en",
+    id: "6b2f8d34-0000-4000-8000-000000000005",
     title: "Welcome",
     body: "Thanks for reaching out! I have your message — share a little more detail and I will help right away.",
     locale: "en",
     sort_order: 5,
   },
   {
-    id: "canned-order-check-en",
+    id: "6b2f8d34-0000-4000-8000-000000000006",
     title: "Ask for order details",
     body: "To find the order, please share the order number (LP-XXXXXX-XXXXXX) and the mobile number used at checkout.",
     locale: "en",

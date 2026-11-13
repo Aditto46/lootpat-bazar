@@ -8,3 +8,5 @@ dist/
 .vite/
 .qoder-sites/
 .qoder-sites.json
+
+*.qoder.site

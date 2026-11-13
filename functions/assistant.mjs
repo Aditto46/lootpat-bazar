@@ -345,7 +345,7 @@ export async function respond({ db, env, locale, message, conversation }) {
     return plain(deliveryChargeAnswer(settings, lang), "delivery");
   }
   if (DELIVERY_TIME_PATTERN.test(text)) {
-    const faq = (await loadFaqs(db)).find((entry) => entry.id === "faq-delivery-time");
+    const faq = (await loadFaqs(db)).find((entry) => entry.id === "3a7c1e90-0000-4000-8000-000000000001");
     if (faq) return plain(lang === "bn" ? faq.answer_bn : faq.answer_en, "delivery");
     return plain(deliveryChargeAnswer(settings, lang), "delivery");
   }

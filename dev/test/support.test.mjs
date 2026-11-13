@@ -226,7 +226,7 @@ test("assignment, canned replies and closing leave an audited trail", async () =
     app,
     "POST",
     `/api/admin/support/${started.conversation.id}/reply`,
-    { cookie: admin.cookie, body: { cannedId: "canned-greeting" } },
+    { cookie: admin.cookie, body: { cannedId: "6b2f8d34-0000-4000-8000-000000000001" } },
   );
   assert.equal(cannedReply.status, 200, JSON.stringify(cannedReply.json));
   const last = cannedReply.json.messages[cannedReply.json.messages.length - 1];

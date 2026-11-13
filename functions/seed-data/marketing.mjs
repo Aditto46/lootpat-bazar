@@ -175,7 +175,9 @@ export function flashSaleSeed(products, now = new Date()) {
       updated_at: startsAt,
     },
     items: picks.map((product, index) => ({
-      id: `weekend-flash-item-${index + 1}`,
+      // flash_sale_items.id is a uuid column, so the seed uses fixed UUIDs
+      // instead of readable slugs.
+      id: `7a5d2c10-0000-4000-8000-00000000000${index + 1}`,
       sale_id: "weekend-flash",
       product_id: product.id,
       sale_price_paisa: Math.max(
