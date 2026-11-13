@@ -111,7 +111,7 @@ Everything below is seed content. Edit it in `/admin/settings` (owner or `settin
 | --- | --- | --- | --- |
 | Store name (Bangla) | লুটপাট বাজার | `/admin/settings`, seed `functions/seed-data/store.mjs:5` | Header and footer logo, page titles |
 | Store name (English) | LootPat Bazar | `/admin/settings`, seed `:6` | Logo subtitle, meta title |
-| Hotline / phone | +8801700000000 | `/admin/settings`, seed `:7` | Footer contact, chat widget call + WhatsApp, privacy contact |
+| Hotline / phone | +8801410286822 | `/admin/settings`, seed `:7` | Footer contact, chat widget call + WhatsApp, privacy contact |
 | Support email | hello@lootpat.bd | `/admin/settings`, seed `:8` | Footer `mailto:`, privacy contact |
 | Address (Bangla) | লেভেল ৪, ১২/এ, রোড ২৭, ধানমন্ডি, ঢাকা ১২০৯ | `/admin/settings`, seed `:9` | Footer help column |
 | Address (English) | Level 4, 12/A, Road 27, Dhanmondi, Dhaka 1209 | `/admin/settings`, seed `:10` | English footer |
@@ -119,14 +119,14 @@ Everything below is seed content. Edit it in `/admin/settings` (owner or `settin
 | WhatsApp | derived from the phone setting | `/admin/settings` — digits only | Chat widget |
 | Trade licence | TRAD/DNCC/000000/2026 | `/admin/settings`, seed `:11` | Stored only (not displayed yet) |
 | TIN | 000000000000 | `/admin/settings`, seed `:12` | Stored only (not displayed yet) |
-| Delivery — Dhaka | ৳60 | `/admin/settings` | Checkout summary, order totals |
+| Delivery — Dhaka | ৳80 | `/admin/settings` | Checkout summary, order totals |
 | Delivery — outside Dhaka | ৳120 | `/admin/settings` | Checkout summary, order totals |
-| Free delivery from | ৳2,000 merchandise value | `/admin/settings` | Cart progress bar, checkout |
+| Free delivery from | ৳2,500 merchandise value | `/admin/settings` | Cart progress bar, checkout |
 | Cash-on-delivery limit | ৳10,000 | `/admin/settings` | Checkout payment step |
 | Payment methods | COD on; bKash / Nagad / SSLCommerz off | `/admin/settings` (gateway switches are owner-only) | Checkout, footer badges |
 | Demo notice | “ডেমো দোকান — যোগাযোগের তথ্য নমুনা।” | `src/lib/i18n.tsx` → `footer.sampleNote` | Footer — remove once real details are in |
 
-Use a mobile number in international form (`+8801XXXXXXXXX`); the WhatsApp link is built from its digits. The support hours are copy, not a setting, so tell me the real opening hours and I will update all three places together.
+Use a mobile number in international form (`+8801410286822`); the WhatsApp link is built from its digits. The support hours are copy, not a setting, so tell me the real opening hours and I will update all three places together.
 
 ## Logo and product media
 
