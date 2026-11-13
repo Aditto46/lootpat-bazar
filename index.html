@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="bn" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>লুটপাট বাজার — প্রিমিয়াম পণ্য, লুটপাট দামে</title>
+    <meta
+      name="description"
+      content="বাংলাদেশের প্রিমিয়াম অনলাইন বাজার। অরিজিনাল পণ্য, ৬৪ জেলায় দ্রুত ডেলিভারি, ক্যাশ অন ডেলিভারি আর সহজ রিটার্ন।"
+    />
+    <meta name="theme-color" content="#0B0B10" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="লুটপাট বাজার — প্রিমিয়াম পণ্য, লুটপাট দামে" />
+    <meta
+      property="og:description"
+      content="অরিজিনাল পণ্য, ৬৪ জেলায় দ্রুত ডেলিভারি, ক্যাশ অন ডেলিভারি আর সহজ রিটার্ন।"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function () {
+        var theme = "dark";
+        try {
+          var saved = localStorage.getItem("lp-theme");
+          if (saved === "light" || saved === "dark") theme = saved;
+        } catch (error) {}
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
