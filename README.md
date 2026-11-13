@@ -112,9 +112,9 @@ Everything below is seed content. Edit it in `/admin/settings` (owner or `settin
 | Store name (Bangla) | লুটপাট বাজার | `/admin/settings`, seed `functions/seed-data/store.mjs:5` | Header and footer logo, page titles |
 | Store name (English) | LootPat Bazar | `/admin/settings`, seed `:6` | Logo subtitle, meta title |
 | Hotline / phone | +8801410286822 | `/admin/settings`, seed `:7` | Footer contact, chat widget call + WhatsApp, privacy contact |
-| Support email | hello@lootpat.bd | `/admin/settings`, seed `:8` | Footer `mailto:`, privacy contact |
-| Address (Bangla) | লেভেল ৪, ১২/এ, রোড ২৭, ধানমন্ডি, ঢাকা ১২০৯ | `/admin/settings`, seed `:9` | Footer help column |
-| Address (English) | Level 4, 12/A, Road 27, Dhanmondi, Dhaka 1209 | `/admin/settings`, seed `:10` | English footer |
+| Support email | adittoo2026@gmail.com | `/admin/settings`, seed `:8` | Footer `mailto:`, privacy contact |
+| Address (Bangla) | পুরান ঢাকা, বাংলাদেশ-১১০০ । | `/admin/settings`, seed `:9` | Footer help column |
+| Address (English) | puran dhaka-1100 | `/admin/settings`, seed `:10` | English footer |
 | Support hours | শনি–বৃহস্পতি, সকাল ১০টা – রাত ৮টা | `src/lib/i18n.tsx` (`footer.hours`, `chat.officeHours`) and the contact FAQ in `functions/seed-data/support.mjs:119` | Footer, chat header, FAQ answer |
 | WhatsApp | derived from the phone setting | `/admin/settings` — digits only | Chat widget |
 | Trade licence | TRAD/DNCC/000000/2026 | `/admin/settings`, seed `:11` | Stored only (not displayed yet) |
