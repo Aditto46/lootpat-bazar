@@ -116,7 +116,7 @@ export default function HeroScene({
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 7], fov: 38 }}
       frameloop={active ? "always" : "never"}
-      gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+      gl={{ alpha: true, antialias: false, powerPreference: "default" }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
         gl.toneMappingExposure = 1.05;
