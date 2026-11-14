@@ -11,6 +11,10 @@ const HeroScene = lazy(() => import("./HeroScene"));
 
 function supportsWebGL(): boolean {
   try {
+    // Skip WebGL on iOS — complex scenes crash low-memory devices
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+      !(window as Window & { MSStream?: unknown }).MSStream;
+    if (isIOS) return false;
     const canvas = document.createElement("canvas");
     return Boolean(
       window.WebGLRenderingContext &&
